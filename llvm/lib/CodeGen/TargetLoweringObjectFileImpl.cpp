@@ -1042,7 +1042,9 @@ MCSection *TargetLoweringObjectFileELF::getSectionForMachineBasicBlock(
     // Function is in a regular .text section.
     StringRef FunctionName = MBB.getParent()->getName();
     if (MBB.getSectionID() == MBBSectionID::ColdSectionID) {
+      Name += ".text.";
       Name += BBSectionsColdTextPrefix;
+      Name += ".";
       Name += FunctionName;
     } else if (MBB.getSectionID() == MBBSectionID::ExceptionSectionID) {
       Name += ".text.eh.";
@@ -2113,6 +2115,99 @@ MCSection *TargetLoweringObjectFileCOFF::getSectionForConstant(
   return TargetLoweringObjectFile::getSectionForConstant(DL, Kind, C,
                                                          Alignment);
 }
+
+MCSection *TargetLoweringObjectFileCOFF::getSectionForMachineBasicBlock(
+    const Function &F, const MachineBasicBlock &MBB,
+    const TargetMachine &TM) const {
+  assert(MBB.isBeginSection() && "Basic block does not start a section!");
+
+  SmallString<128> Name, ComdatSymName;
+  unsigned Characteristics = 0;
+  
+  auto *ParentSection = MBB.getParent()->getSection();
+  auto ParentSectionNameStr = std::string(ParentSection->getName());
+  auto ParentSectionName = StringRef(ParentSectionNameStr);
+  if (ParentSection->isText()) {
+      Characteristics = getCOFFSectionFlags(SectionKind::getText(), TM);
+  }
+
+  auto ComdatSelect = COFF::IMAGE_COMDAT_SELECT_NODUPLICATES;
+  unsigned UniqueID = MCContext::GenericSectionID;
+
+  if (MBB.getSectionID() == MBBSectionID::ColdSectionID) {
+    // NOTE: Here we override the name so the final naming matches
+    // what is done for linux (ie. .text$cold or .text$cold$foo) where
+    // the `cold` subsection name appears first. Below we append
+    // the symbol name should it be specified for WindowsGNU.
+    ParentSectionName.consume_back("$hot");
+    Name = ParentSectionName.str() + "$" + BBSectionsColdTextPrefix;
+  } else if (MBB.getSectionID() == MBBSectionID::ExceptionSectionID) {
+    llvm::report_fatal_error("Not Implemented yet!");
+  } else {
+    // Append "$symbol" to the section name *before* IR-level mangling is
+    // applied when targetting mingw. This is what GCC does, and the ld.bfd
+    // COFF linker will not properly handle comdats otherwise.
+    // For COFF we must ALWAYS emit a unique section name even
+    // when the flag isn't specified as it lacks a `unique` attribute like ELF.
+    Name = ParentSectionName.str() + "$" + MBB.getSymbol()->getName().str();
+  }
+
+  // If we have -ffunction-sections then we should emit the global value to a
+  // uniqued section specifically for it.
+  if (TM.getFunctionSections() || F.hasComdat()) {
+    Characteristics |= COFF::IMAGE_SCN_LNK_COMDAT;
+    // Use the parent function's name or COMDAT if it has one.
+    ComdatSymName =
+        F.hasComdat() ? F.getComdat()->getName() : MBB.getParent()->getName();
+    ComdatSelect = COFF::IMAGE_COMDAT_SELECT_ASSOCIATIVE;
+  }
+
+  UniqueID = NextUniqueID++;
+
+  return getContext().getCOFFSection(Name, Characteristics, ComdatSymName,
+                                     ComdatSelect, UniqueID);
+}
+
+MCSection *TargetLoweringObjectFileCOFF::getUniqueSectionForFunction(
+    const Function &F, const TargetMachine &TM) const {
+  int Selection = 0;
+  SectionKind Kind = SectionKind::getText();
+  unsigned Characteristics = getCOFFSectionFlags(Kind, TM);
+
+  // If we have -ffunction-sections then we should emit the global value to a
+  // uniqued section specifically for it.
+  if (TM.getFunctionSections() || F.hasComdat()) {
+    Characteristics |= COFF::IMAGE_SCN_LNK_COMDAT;
+    Selection = getSelectionForCOFF(&F);
+    if (!Selection)
+      Selection = COFF::IMAGE_COMDAT_SELECT_NODUPLICATES;
+  }
+
+  StringRef COMDATSymName = TM.getSymbol(&F)->getName();
+  SmallString<128> Name;
+  if (F.hasSection()) {
+    Name = F.getSection();
+  } else {
+    Name = getCOFFSectionNameForUniqueGlobal(Kind);
+  }
+
+
+  if (std::optional<StringRef> Prefix = F.getSectionPrefix()) {
+    raw_svector_ostream(Name) << '$' << *Prefix;
+  }
+
+  if (getContext().getTargetTriple().isWindowsGNUEnvironment()) {
+    // Append "$symbol" to the section name *before* IR-level mangling is
+    // applied when targetting mingw. This is what GCC does, and the ld.bfd
+    // COFF linker will not properly handle comdats otherwise.
+    Name += '$';
+    Name += COMDATSymName;
+  }
+
+  return getContext().getCOFFSection(Name, Characteristics, COMDATSymName,
+                                     Selection, NextUniqueID++);
+}
+
 
 //===----------------------------------------------------------------------===//
 //                                  Wasm

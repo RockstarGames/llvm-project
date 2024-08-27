@@ -215,6 +215,9 @@ void WinException::beginFunclet(const MachineBasicBlock &MBB,
   // Mark 'Sym' as starting our funclet.
   if (shouldEmitMoves || shouldEmitPersonality) {
     CurrentFuncletTextSection = Asm->OutStreamer->getCurrentSectionOnly();
+    if (Asm->MF->hasBBSections()) {
+      llvm::report_fatal_error("Not Implemented yet!");
+    }
     Asm->OutStreamer->emitWinCFIStartProc(Sym);
   }
 

@@ -86,12 +86,12 @@ using namespace llvm;
 
 // Placing the cold clusters in a separate section mitigates against poor
 // profiles and allows optimizations such as hugepage mapping to be applied at a
-// section granularity. Defaults to ".text.split." which is recognized by lld
+// section granularity. Defaults to "split" which is recognized by lld
 // via the `-z keep-text-section-prefix` flag.
 cl::opt<std::string> llvm::BBSectionsColdTextPrefix(
     "bbsections-cold-text-prefix",
     cl::desc("The text prefix to use for cold basic block clusters"),
-    cl::init(".text.split."), cl::Hidden);
+    cl::init("split"), cl::Hidden);
 
 static cl::opt<bool> BBSectionsDetectSourceDrift(
     "bbsections-detect-source-drift",
@@ -265,12 +265,14 @@ void llvm::sortBasicBlocksAndUpdateBranches(
 // zero implies "no landing pad." This function inserts a NOP just before the EH
 // pad label to ensure a nonzero offset.
 void llvm::avoidZeroOffsetLandingPad(MachineFunction &MF) {
-  for (auto &MBB : MF) {
-    if (MBB.isBeginSection() && MBB.isEHPad()) {
-      MachineBasicBlock::iterator MI = MBB.begin();
-      while (!MI->isEHLabel())
-        ++MI;
-      MF.getSubtarget().getInstrInfo()->insertNoop(MBB, MI);
+  if (!MF.getTarget().getTargetTriple().isOSWindows()) {
+    for (auto &MBB : MF) {
+      if (MBB.isBeginSection() && MBB.isEHPad()) {
+        MachineBasicBlock::iterator MI = MBB.begin();
+        while (!MI->isEHLabel())
+          ++MI;
+        MF.getSubtarget().getInstrInfo()->insertNoop(MBB, MI);
+      }
     }
   }
 }

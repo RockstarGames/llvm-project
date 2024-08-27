@@ -1836,7 +1836,14 @@ void AsmPrinter::emitFunctionBody() {
     // We must emit temporary symbol for the end of this basic block, if either
     // we have BBLabels enabled or if this basic blocks marks the end of a
     // section.
+    // NOTE: We must emit the labels if basic block sections are enabled period
+    // (at least for COFF). Technically, any platform can then use the labels to
+    // compute sizes later on. In the case where the .size directive is
+    // supported we can emit it here. In the case of COFF, this is handled when
+    // generating CodeViewDebug info.
+    const Triple &TT = TM.getTargetTriple();
     if (MF->hasBBLabels() || MF->getTarget().Options.BBAddrMap ||
+        (MF->hasBBSections() && TT.isOSBinFormatCOFF()) ||
         (MAI->hasDotTypeDotSizeDirective() && MBB.isEndSection()))
       OutStreamer->emitLabel(MBB.getEndSymbol());
 
@@ -2584,10 +2591,11 @@ void AsmPrinter::SetupMachineFunction(MachineFunction &MF) {
   bool NeedsLocalForSize = MAI->needsLocalForSize();
   if (F.hasFnAttribute("patchable-function-entry") ||
       F.hasFnAttribute("function-instrument") ||
-      F.hasFnAttribute("xray-instruction-threshold") ||
-      needFuncLabels(MF, *this) || NeedsLocalForSize ||
+      F.hasFnAttribute("xray-instruction-threshold") || 
+      needFuncLabels(MF, *this) || NeedsLocalForSize || 
       MF.getTarget().Options.EmitStackSizeSection ||
-      MF.getTarget().Options.BBAddrMap || MF.hasBBLabels()) {
+      MF.getTarget().Options.BBAddrMap || MF.hasBBLabels() || 
+      (MF.hasBBSections() && TM.getTargetTriple().isOSBinFormatCOFF())) {
     CurrentFnBegin = createTempSymbol("func_begin");
     if (NeedsLocalForSize)
       CurrentFnSymForSize = CurrentFnBegin;
@@ -3952,7 +3960,6 @@ void AsmPrinter::emitBasicBlockStart(const MachineBasicBlock &MBB) {
   if (MBB.isEHFuncletEntry()) {
     for (auto &Handler : Handlers) {
       Handler->endFunclet();
-      Handler->beginFunclet(MBB);
     }
   }
 
@@ -3964,6 +3971,12 @@ void AsmPrinter::emitBasicBlockStart(const MachineBasicBlock &MBB) {
         getObjFileLowering().getSectionForMachineBasicBlock(MF->getFunction(),
                                                             MBB, TM));
     CurrentSectionBeginSym = MBB.getSymbol();
+
+    // NOTE: We must emit the .globl for the section symbol for COFF.
+    // This is required for proper debug information with BBSections.
+    if (MF->hasBBSections() && TM.getTargetTriple().isOSBinFormatCOFF())
+      OutStreamer->emitSymbolAttribute(CurrentSectionBeginSym,
+                                       MCSymbolAttr::MCSA_Global);
   }
 
   for (auto &Handler : DebugHandlers)
@@ -3973,6 +3986,15 @@ void AsmPrinter::emitBasicBlockStart(const MachineBasicBlock &MBB) {
   const Align Alignment = MBB.getAlignment();
   if (Alignment != Align(1))
     emitAlignment(Alignment, nullptr, MBB.getMaxBytesForAlignment());
+
+  // WinException::beginFunclet() set CurrentFuncletTextSection as
+  // Asm->OutStreamer->getCurrentSectionOnly(). Start a new funclet
+  // after switching to newly created BB section.
+  if (MBB.isEHFuncletEntry()) {
+    for (auto &Handler : Handlers) {
+      Handler->beginFunclet(MBB);
+    }
+  }
 
   // If the block has its address taken, emit any labels that were used to
   // reference the block.  It is possible that there is more than one label
@@ -4071,7 +4093,7 @@ bool AsmPrinter::shouldEmitLabelForBasicBlock(
   // in the labels mode (option `=labels`) and every section beginning in the
   // sections mode (`=all` and `=list=`).
   if ((MF->hasBBLabels() || MF->getTarget().Options.BBAddrMap ||
-       MBB.isBeginSection()) &&
+       MBB.isBeginSection() || (MF->hasBBSections() && TM.getTargetTriple().isOSBinFormatCOFF())) &&
       !MBB.isEntryBlock())
     return true;
   // A label is needed for any block with at least one predecessor (when that

@@ -1097,22 +1097,32 @@ MCObjectFileInfo::getStackSizesSection(const MCSection &TextSec) const {
 
 MCSection *
 MCObjectFileInfo::getBBAddrMapSection(const MCSection &TextSec) const {
-  if (Ctx->getObjectFileType() != MCContext::IsELF)
-    return nullptr;
+  if (Ctx->getObjectFileType() == MCContext::IsELF) {
+    const MCSectionELF &ElfSec = static_cast<const MCSectionELF &>(TextSec);
+    unsigned Flags = ELF::SHF_LINK_ORDER;
+    StringRef GroupName;
+    if (const MCSymbol *Group = ElfSec.getGroup()) {
+        GroupName = Group->getName();
+        Flags |= ELF::SHF_GROUP;
+    }
 
-  const MCSectionELF &ElfSec = static_cast<const MCSectionELF &>(TextSec);
-  unsigned Flags = ELF::SHF_LINK_ORDER;
-  StringRef GroupName;
-  if (const MCSymbol *Group = ElfSec.getGroup()) {
-    GroupName = Group->getName();
-    Flags |= ELF::SHF_GROUP;
+    // Use the text section's begin symbol and unique ID to create a separate
+    // .llvm_bb_addr_map section associated with every unique text section.
+    return Ctx->getELFSection(".llvm_bb_addr_map", ELF::SHT_LLVM_BB_ADDR_MAP,
+                                Flags, 0, GroupName, true, ElfSec.getUniqueID(),
+                                cast<MCSymbolELF>(TextSec.getBeginSymbol()));
+  } else if (Ctx->getObjectFileType() == MCContext::IsCOFF) {
+    const MCSectionCOFF &COFFSec = static_cast<const MCSectionCOFF &>(TextSec);
+    auto comdatSym = COFFSec.getCOMDATSymbol();
+    return Ctx->getCOFFSection(".llvm_bb_addr_map",
+                               COFF::IMAGE_SCN_CNT_INITIALIZED_DATA |
+                                   COFF::IMAGE_SCN_MEM_READ |
+                                   COFF::IMAGE_SCN_LNK_COMDAT,
+                               comdatSym->getName(),
+                               COFF::IMAGE_COMDAT_SELECT_ASSOCIATIVE);
   }
 
-  // Use the text section's begin symbol and unique ID to create a separate
-  // .llvm_bb_addr_map section associated with every unique text section.
-  return Ctx->getELFSection(".llvm_bb_addr_map", ELF::SHT_LLVM_BB_ADDR_MAP,
-                            Flags, 0, GroupName, true, ElfSec.getUniqueID(),
-                            cast<MCSymbolELF>(TextSec.getBeginSymbol()));
+  return nullptr;
 }
 
 MCSection *

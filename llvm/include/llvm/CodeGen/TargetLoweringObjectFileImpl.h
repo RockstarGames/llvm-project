@@ -201,6 +201,15 @@ public:
                                    const Constant *C,
                                    Align &Alignment) const override;
 
+  MCSection *
+  getSectionForMachineBasicBlock(const Function &F,
+                                 const MachineBasicBlock &MBB,
+                                 const TargetMachine &TM) const override;
+
+  MCSection *
+  getUniqueSectionForFunction(const Function &F,
+                              const TargetMachine &TM) const override;
+
 private:
   void emitLinkerDirectives(MCStreamer &Streamer, Module &M) const;
 };
