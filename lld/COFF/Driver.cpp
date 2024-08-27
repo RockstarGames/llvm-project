@@ -2414,6 +2414,12 @@ void LinkerDriver::linkerMain(ArrayRef<const char *> argsArr) {
     config->buildIDHash = BuildIDHash::PDB;
   }
 
+  config->ltoBasicBlockSections =
+      args.getLastArgValue(OPT_lto_basic_block_sections);
+  config->ltoUniqueBasicBlockSectionNames =
+      args.hasFlag(OPT_lto_unique_basic_block_section_names,
+                    OPT_lto_unique_basic_block_section_names_no, false);
+
   // Set default image base if /base is not given.
   if (config->imageBase == uint64_t(-1))
     config->imageBase = getDefaultImageBase();

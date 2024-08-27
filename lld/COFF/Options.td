@@ -310,6 +310,12 @@ defm build_id: B<
      "Generate build ID (always on when generating PDB)",
      "Do not Generate build ID">;
 
+def lto_basic_block_sections: P<"lto-basic-block-sections",
+    "Enable basic block sections for LTO">;
+defm lto_unique_basic_block_section_names: B<"lto-unique-basic-block-section-names",
+    "Give unique names to every basic block section for LTO",
+    "Do not give unique names to every basic block section for LTO (default)">;
+
 // Flags for debugging
 def lldmap : F<"lldmap">;
 def lldmap_file : P_priv<"lldmap">;

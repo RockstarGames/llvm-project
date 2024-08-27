@@ -328,6 +328,8 @@ struct Configuration {
   EmitKind emit = EmitKind::Obj;
   bool allowDuplicateWeak = false;
   BuildIDHash buildIDHash = BuildIDHash::None;
+  bool ltoUniqueBasicBlockSectionNames;
+  llvm::StringRef ltoBasicBlockSections;
 };
 
 } // namespace lld::coff

@@ -60,6 +60,30 @@ lto::Config BitcodeCompiler::createConfig() {
   c.Options.FunctionSections = true;
   c.Options.DataSections = true;
 
+  if (!ctx.config.ltoBasicBlockSections.empty()) {
+    if (ctx.config.ltoBasicBlockSections == "all") {
+      c.Options.BBSections = BasicBlockSection::All;
+    } else if (ctx.config.ltoBasicBlockSections == "labels") {
+      c.Options.BBSections = BasicBlockSection::Labels;
+    } else if (ctx.config.ltoBasicBlockSections == "none") {
+      c.Options.BBSections = BasicBlockSection::None;
+    } else {
+      ErrorOr<std::unique_ptr<MemoryBuffer>> mbOrErr =
+          MemoryBuffer::getFile(ctx.config.ltoBasicBlockSections.str());
+      if (!mbOrErr) {
+        error("cannot open " + ctx.config.ltoBasicBlockSections + ":" +
+              mbOrErr.getError().message());
+      } else {
+        c.Options.BBSectionsFuncListBuf = std::move(*mbOrErr);
+      }
+      c.Options.BBSections = BasicBlockSection::List;
+    }
+  }
+
+  c.Options.UniqueBasicBlockSectionNames =
+      ctx.config.ltoUniqueBasicBlockSectionNames;
+
+
   // Use static reloc model on 32-bit x86 because it usually results in more
   // compact code, and because there are also known code generation bugs when
   // using the PIC model (see PR34306).

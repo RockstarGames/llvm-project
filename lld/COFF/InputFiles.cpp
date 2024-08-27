@@ -394,9 +394,19 @@ void ObjFile::maybeAssociateSEHForMingw(
 }
 
 Symbol *ObjFile::createRegular(COFFSymbolRef sym) {
-  SectionChunk *sc = sparseChunks[sym.getSectionNumber()];
+  int32_t sectionNumber = sym.getSectionNumber();
+  SectionChunk *sc = sparseChunks[sectionNumber];
+  StringRef name = check(coffObj->getSymbolName(sym));
+
+  if (sc && sc->getOutputCharacteristics() & IMAGE_SCN_MEM_EXECUTE) {
+    // Much like in MinGW we use the suffix from the .text$<func>.<part>
+    // instead. This allows us to maintain the unique symbol for a basic block
+    // section should it exist. Argueably, this is how it should always be
+    // since you don't want '.text$' to be part of the new symbol
+    name.consume_front(".text$");
+  }
+
   if (sym.isExternal()) {
-    StringRef name = check(coffObj->getSymbolName(sym));
     if (sc)
       return ctx.symtab.addRegular(this, name, sym.getGeneric(), sc,
                                    sym.getValue());
@@ -470,6 +480,18 @@ void ObjFile::initializeSymbols() {
       continue;
     }
     symbols[i] = createRegular(sym);
+
+    if (auto *assocSec = sparseChunks[sym.getSectionNumber()]) {
+      // We want to tie the newly created symbol with the associated
+      // section chunk. Otherwise, it will end up pointing to the
+      // parent symbol and not allow sorting as one would expect.
+      if (assocSec &&
+          (assocSec->getOutputCharacteristics() & IMAGE_SCN_MEM_EXECUTE) &&
+          assocSec->getSectionName().starts_with(".text$") && 
+          assocSec->getSectionName().contains(".__part.")) {
+        assocSec->sym = cast_or_null<DefinedRegular>(symbols[i]);
+      }
+    }
   }
 
   for (auto &kv : weakAliases) {

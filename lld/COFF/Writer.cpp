@@ -942,7 +942,15 @@ static bool shouldStripSectionSuffix(SectionChunk *sc, StringRef name,
   // hypothetical case of comdat .CRT$XCU, we definitely need to keep the
   // suffix for sorting. Thus, to play it safe, only strip the suffix for
   // the standard sections.
-  if (!isMinGW)
+
+  // We form 'basic block section groups' by putting
+  // the parent symbol name after the '$'. We want to strip these names with
+  // `__part.` so that the relevant section chunks are properly placed into
+  // the standard section. This enables sorting of the basic block sections 
+  // since they will now be in '.text'.
+  if (name.contains(".__part."))
+    return true;
+  if  (!isMinGW)
     return false;
   if (!sc || !sc->isCOMDAT())
     return false;
