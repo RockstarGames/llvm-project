@@ -27,6 +27,7 @@
 #include "llvm/Support/Compiler.h"
 #include "llvm/Support/Debug.h"
 #include "llvm/Support/raw_ostream.h"
+#include "llvm/Target/TargetMachine.h"
 #include <cassert>
 #include <string>
 #include <tuple>
@@ -254,6 +255,41 @@ void LexicalScopes::constructScopeNest(LexicalScope *Scope) {
   }
 }
 
+bool LexicalScope::inSameSection(const MachineInstr *MI) const {
+
+  // As the original behavior didn't depend on the logic here we always
+  // return true if not COFF.
+  auto isMIInSameSection = true;
+
+  // NOTE: It's unclear whether this logic should also affect other platforms.
+  // Ideally, I didn't want to introduce COFF specific logic here, but
+  // it is necessary in order for the `assignInstructionRanges()` below
+  // to not merge ranges across section boundaries. Otherwise, it is not
+  // possible (AFAIK), to disambiguate boundaries when emitting debug
+  // information. Specifically, for CodeView that uses these ranges for the
+  // `.cv_def_range` directive.
+  auto *MF = MI->getMF();
+  auto &TT = MF->getTarget().getTargetTriple();
+  if (MF->hasBBSections() && TT.isOSBinFormatCOFF()) {
+    auto isFirstInsnInSameSection = false;
+    auto isLastInsnInSameSection = false;
+
+    if (FirstInsn && MI) {
+      isFirstInsnInSameSection =
+          FirstInsn->getParent()->sameSection(MI->getParent());
+    }
+
+    if (LastInsn && MI) {
+      isLastInsnInSameSection =
+          LastInsn->getParent()->sameSection(MI->getParent());
+    }
+
+    isMIInSameSection = isFirstInsnInSameSection && isLastInsnInSameSection;
+  }
+
+  return isMIInSameSection;
+}
+
 /// assignInstructionRanges - Find ranges of instructions covered by each
 /// lexical scope.
 void LexicalScopes::assignInstructionRanges(
@@ -263,8 +299,18 @@ void LexicalScopes::assignInstructionRanges(
   for (const auto &R : MIRanges) {
     LexicalScope *S = MI2ScopeMap.lookup(R.first);
     assert(S && "Lost LexicalScope for a machine instruction!");
-    if (PrevLexicalScope && !PrevLexicalScope->dominates(S))
-      PrevLexicalScope->closeInsnRange(S);
+    // NOTE: These changes are required in order to support the
+    // .cv_def_range directive.
+    if (PrevLexicalScope) {
+      if (!PrevLexicalScope->inSameSection(R.first)) {
+        // NOTE: It is important we don't link `S` when closing,
+        // the `PrevLexicalScope`. Otherwise ranges will overlap.
+        PrevLexicalScope->closeInsnRange();
+      } else if (!PrevLexicalScope->dominates(S)) {
+        PrevLexicalScope->closeInsnRange(S);
+      }
+    }
+
     S->openInsnRange(R.first);
     S->extendInsnRange(R.second);
     PrevLexicalScope = S;

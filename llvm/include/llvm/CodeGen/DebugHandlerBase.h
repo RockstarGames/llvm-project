@@ -71,6 +71,7 @@ protected:
   DebugLoc PrevInstLoc;
   MCSymbol *PrevLabel = nullptr;
   const MachineBasicBlock *PrevInstBB = nullptr;
+  unsigned PrevFuncId;
 
   /// This location indicates end of function prologue and beginning of
   /// function body.
@@ -134,8 +135,8 @@ public:
   void beginFunction(const MachineFunction *MF);
   void endFunction(const MachineFunction *MF);
 
-  void beginBasicBlockSection(const MachineBasicBlock &MBB);
-  void endBasicBlockSection(const MachineBasicBlock &MBB);
+  virtual void beginBasicBlockSection(const MachineBasicBlock &MBB);
+  virtual void endBasicBlockSection(const MachineBasicBlock &MBB);
 
   virtual void beginCodeAlignment(const MachineBasicBlock &MBB) {}
 

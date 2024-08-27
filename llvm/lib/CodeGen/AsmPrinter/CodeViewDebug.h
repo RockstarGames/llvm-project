@@ -22,6 +22,7 @@
 #include "llvm/ADT/SetVector.h"
 #include "llvm/ADT/SmallSet.h"
 #include "llvm/ADT/SmallVector.h"
+#include "llvm/CodeGen/AsmPrinter.h"
 #include "llvm/CodeGen/DbgEntityHistoryCalculator.h"
 #include "llvm/CodeGen/DebugHandlerBase.h"
 #include "llvm/CodeGen/MachineJumpTableInfo.h"
@@ -210,6 +211,20 @@ private:
     bool HaveLineInfo = false;
 
     bool HasFramePointer = false;
+
+    MapVector<const MachineBasicBlock *,
+              std::pair<int, AsmPrinter::MBBSectionRange>>
+        BasicBlockSections;
+
+    void initializeBasicBlockSections(const MachineFunction &MF);
+
+    void finalizeBasicBlockSections(const MachineFunction &MF, AsmPrinter *Asm);
+
+    bool hasBBSections() const;
+
+    unsigned getNextFuncId() const;
+
+    unsigned getFuncId(const MachineBasicBlock *MBB) const;
   };
   FunctionInfo *CurFn = nullptr;
 
@@ -342,6 +357,15 @@ private:
                              const MCSymbol *Fn);
 
   void emitDebugInfoForFunction(const Function *GV, FunctionInfo &FI);
+
+  void emitDebugInfoForBasicBlockSection(const Function *GV, StringRef FuncName,
+                                         FunctionInfo &FI);
+
+  void emitDebugInfoForSymbolSubsection(
+      StringRef SymbolName, codeview::SymbolKind ProcKind,
+      codeview::ProcSymFlags ProcFlags, unsigned FuncId, DISubprogram *SP,
+      uint32_t FuncTypeIdx, const MCSymbol *BeginSym, const MCSymbol *EndSym,
+      FunctionInfo &FI);
 
   void emitDebugInfoForRetainedTypes();
 
@@ -522,6 +546,8 @@ public:
 
   /// Process beginning of an instruction.
   void beginInstruction(const MachineInstr *MI) override;
+
+  void beginBasicBlockSection(const MachineBasicBlock &MBB) override;
 };
 
 template <> struct DenseMapInfo<CodeViewDebug::LocalVarDef> {

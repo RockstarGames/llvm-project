@@ -130,6 +130,79 @@ static CPUType mapArchToCVCPUType(Triple::ArchType Type) {
   }
 }
 
+void CodeViewDebug::FunctionInfo::initializeBasicBlockSections(
+    const MachineFunction &MF) {
+  for (auto &MBB : MF) {
+    if (MBB.isEntryBlock()) {
+      // We are only interested in the basic blocks
+      // after the entry block as those are the ones that require
+      // additional debug information.
+      continue;
+    }
+
+    // NOTE: getNumber() will return numbers in [0,size) where we have
+    // carved out enough space in the FuncIds for the next function.
+    BasicBlockSections.insert({&MBB, {FuncId + MBB.getNumber(), {}}});
+  }
+}
+
+void CodeViewDebug::FunctionInfo::finalizeBasicBlockSections(
+    const MachineFunction &MF, AsmPrinter *Asm) {
+  for (auto &MBB : MF) {
+    if (MBB.isEntryBlock()) {
+      continue;
+    }
+
+    // NOTE: Inserting into the BasicBlockSections is done in two steps
+    // since the Asm->MBBSectionRanges aren't available until endFunctionImpl().
+    // This allows us to keep things more uniform by being able to leverage
+    // BasicBlockSections during beginFunctionImpl().
+    auto &SecRange = Asm->MBBSectionRanges[MBB.getSectionID()];
+    if (SecRange.BeginLabel != nullptr && SecRange.EndLabel != nullptr) {
+      BasicBlockSections[&MBB] = {FuncId + MBB.getNumber(), SecRange};
+    }
+  }
+}
+
+unsigned CodeViewDebug::FunctionInfo::getNextFuncId() const {
+  if (hasBBSections()) {
+    // NOTE: We will use the MBB numbers for the corresponding
+    // FuncIds that belong to the new BBSec.
+    // We "pad" the FuncId to allow assigning an ID to each
+    // basic block.
+    return FuncId + BasicBlockSections.size() + 1;
+  }
+
+  return FuncId + 1;
+}
+
+unsigned
+CodeViewDebug::FunctionInfo::getFuncId(const MachineBasicBlock *MBB) const {
+  if (hasBBSections() && MBB != nullptr) {
+
+    if (MBB->isEntryBlock()) {
+      return FuncId;
+    }
+
+    // NOTE: getNumber() will return numbers in [0,size) where we have
+    // carved out enough space in the FuncIds for the next function.
+    assert(MBB->getParent() != nullptr && "MBB does not belong to a function");
+    const auto it = BasicBlockSections.find(MBB);
+    if (it != BasicBlockSections.end()) {
+      return it->second.first;
+    } else {
+      report_fatal_error("MBB not in a basic block section!");
+    }
+  }
+
+  return FuncId;
+}
+
+bool CodeViewDebug::FunctionInfo::hasBBSections() const {
+  return !BasicBlockSections.empty();
+}
+
+
 CodeViewDebug::CodeViewDebug(AsmPrinter *AP)
     : DebugHandlerBase(AP), OS(*Asm->OutStreamer), TypeTable(Allocator) {}
 
@@ -507,8 +580,12 @@ static void addLocIfNotPresent(SmallVectorImpl<const DILocation *> &Locs,
 
 void CodeViewDebug::maybeRecordLocation(const DebugLoc &DL,
                                         const MachineFunction *MF) {
+  unsigned FuncId = CurFn->getFuncId(PrevInstBB);
+
   // Skip this instruction if it has the same location as the previous one.
-  if (!DL || DL == PrevInstLoc)
+  // NOTE: We now need to additionally check the FuncIds since if the same
+  // DL is in a new BB then with BBSec enabled we need to emit the .cv_loc.
+  if ((!DL || DL == PrevInstLoc) && (PrevFuncId == FuncId))
     return;
 
   const DIScope *Scope = DL->getScope();
@@ -533,9 +610,13 @@ void CodeViewDebug::maybeRecordLocation(const DebugLoc &DL,
   else
     FileId = CurFn->LastFileId = maybeRecordFile(DL->getFile());
   PrevInstLoc = DL;
+  PrevFuncId = FuncId;
 
-  unsigned FuncId = CurFn->FuncId;
   if (const DILocation *SiteLoc = DL->getInlinedAt()) {
+    if (MF->hasBBSections()) {
+      report_fatal_error("Inline Line Tables not yet supported.");
+    }
+
     const DILocation *Loc = DL.get();
 
     // If this location was actually inlined from somewhere else, give it the ID
@@ -1101,45 +1182,14 @@ void CodeViewDebug::emitDebugInfoForThunk(const Function *GV,
   endCVSubsection(SymbolsEnd);
 }
 
-void CodeViewDebug::emitDebugInfoForFunction(const Function *GV,
-                                             FunctionInfo &FI) {
-  // For each function there is a separate subsection which holds the PC to
-  // file:line table.
-  const MCSymbol *Fn = Asm->getSymbol(GV);
-  assert(Fn);
-
-  // Switch to the to a comdat section, if appropriate.
-  switchToDebugSectionForSymbol(Fn);
-
-  std::string FuncName;
-  auto *SP = GV->getSubprogram();
-  assert(SP);
-  setCurrentSubprogram(SP);
-
-  if (SP->isThunk()) {
-    emitDebugInfoForThunk(GV, FI, Fn);
-    return;
-  }
-
-  // If we have a display name, build the fully qualified name by walking the
-  // chain of scopes.
-  if (!SP->getName().empty())
-    FuncName = getFullyQualifiedName(SP->getScope(), SP->getName());
-
-  // If our DISubprogram name is empty, use the mangled name.
-  if (FuncName.empty())
-    FuncName = std::string(GlobalValue::dropLLVMManglingEscape(GV->getName()));
-
-  // Emit FPO data, but only on 32-bit x86. No other platforms use it.
-  if (Triple(MMI->getModule()->getTargetTriple()).getArch() == Triple::x86)
-    OS.emitCVFPOData(Fn);
-
+void CodeViewDebug::emitDebugInfoForSymbolSubsection(
+    StringRef SymbolName, SymbolKind ProcKind, ProcSymFlags ProcFlags,
+    unsigned FuncId, DISubprogram *SP, uint32_t FuncTypeIdx,
+    const MCSymbol *BeginSym, const MCSymbol *EndSym, FunctionInfo &FI) {
   // Emit a symbol subsection, required by VS2012+ to find function boundaries.
-  OS.AddComment("Symbol subsection for " + Twine(FuncName));
+  OS.AddComment("Symbol subsection for " + SymbolName);
   MCSymbol *SymbolsEnd = beginCVSubsection(DebugSubsectionKind::Symbols);
   {
-    SymbolKind ProcKind = GV->hasLocalLinkage() ? SymbolKind::S_LPROC32_ID
-                                                : SymbolKind::S_GPROC32_ID;
     MCSymbol *ProcRecordEnd = beginSymbolRecord(ProcKind);
 
     // These fields are filled in by tools like CVPACK which run after the fact.
@@ -1152,30 +1202,23 @@ void CodeViewDebug::emitDebugInfoForFunction(const Function *GV,
     // This is the important bit that tells the debugger where the function
     // code is located and what's its size:
     OS.AddComment("Code size");
-    OS.emitAbsoluteSymbolDiff(FI.End, Fn, 4);
+    OS.emitAbsoluteSymbolDiff(EndSym, BeginSym, 4);
     OS.AddComment("Offset after prologue");
     OS.emitInt32(0);
     OS.AddComment("Offset before epilogue");
     OS.emitInt32(0);
     OS.AddComment("Function type index");
-    OS.emitInt32(getFuncIdForSubprogram(GV->getSubprogram()).getIndex());
+    OS.emitInt32(FuncTypeIdx);
     OS.AddComment("Function section relative address");
-    OS.emitCOFFSecRel32(Fn, /*Offset=*/0);
+    OS.emitCOFFSecRel32(BeginSym, /*Offset=*/0);
     OS.AddComment("Function section index");
-    OS.emitCOFFSectionIndex(Fn);
+    OS.emitCOFFSectionIndex(BeginSym);
     OS.AddComment("Flags");
-    ProcSymFlags ProcFlags = ProcSymFlags::HasOptimizedDebugInfo;
-    if (FI.HasFramePointer)
-      ProcFlags |= ProcSymFlags::HasFP;
-    if (GV->hasFnAttribute(Attribute::NoReturn))
-      ProcFlags |= ProcSymFlags::IsNoReturn;
-    if (GV->hasFnAttribute(Attribute::NoInline))
-      ProcFlags |= ProcSymFlags::IsNoInline;
     OS.emitInt8(static_cast<uint8_t>(ProcFlags));
     // Emit the function display name as a null-terminated string.
     OS.AddComment("Function name");
     // Truncate the name so we won't overflow the record length field.
-    emitNullTerminatedSymbolName(OS, FuncName);
+    emitNullTerminatedSymbolName(OS, SymbolName);
     endSymbolRecord(ProcRecordEnd);
 
     MCSymbol *FrameProcEnd = beginSymbolRecord(SymbolKind::S_FRAMEPROC);
@@ -1196,7 +1239,6 @@ void CodeViewDebug::emitDebugInfoForFunction(const Function *GV,
     OS.emitInt32(uint32_t(FI.FrameProcOpts));
     endSymbolRecord(FrameProcEnd);
 
-    emitInlinees(FI.Inlinees);
     emitLocalVariableList(FI, FI.Locals);
     emitGlobalVariableList(FI.Globals);
     emitLexicalBlockList(FI.ChildBlocks, FI);
@@ -1248,15 +1290,107 @@ void CodeViewDebug::emitDebugInfoForFunction(const Function *GV,
     if (SP != nullptr)
       emitDebugInfoForUDTs(LocalUDTs);
 
-    emitDebugInfoForJumpTables(FI);
-
     // We're done with this function.
     emitEndSymbolRecord(SymbolKind::S_PROC_ID_END);
   }
   endCVSubsection(SymbolsEnd);
 
   // We have an assembler directive that takes care of the whole line table.
-  OS.emitCVLinetableDirective(FI.FuncId, Fn, FI.End);
+  OS.emitCVLinetableDirective(FuncId, BeginSym, EndSym);
+}
+
+void CodeViewDebug::emitDebugInfoForBasicBlockSection(const Function *GV,
+                                                      StringRef FuncName,
+                                                      FunctionInfo &FI) {
+  for (auto &keyValue : FI.BasicBlockSections) {
+    auto BBId = keyValue.second.first;
+    auto &BBSecLabels = keyValue.second.second;
+
+    MCSectionCOFF *DebugSec = cast<MCSectionCOFF>(
+        Asm->getObjFileLowering().getCOFFDebugSymbolsSection());
+
+    // We make the debug$S section associated to the BBSection Symbol as opposed
+    // to the parent symbol. Not sure if this is necessary or not. For now, it
+    // seems the appropriate thing to do.
+    DebugSec = OS.getContext().getAssociativeCOFFSection(
+        DebugSec, BBSecLabels.BeginLabel);
+
+    OS.switchSection(DebugSec);
+
+    // Emit the magic version number if this is the first time we've switched to
+    // this section.
+    if (ComdatDebugSections.insert(DebugSec).second)
+      emitCodeViewMagicVersion();
+
+    SymbolKind ProcKind = GV->hasLocalLinkage() ? SymbolKind::S_LPROC32_ID
+                                                : SymbolKind::S_GPROC32_ID;
+
+    ProcSymFlags ProcFlags = ProcSymFlags::HasOptimizedDebugInfo;
+    if (FI.HasFramePointer)
+      ProcFlags |= ProcSymFlags::HasFP;
+    if (GV->hasFnAttribute(Attribute::NoReturn))
+      ProcFlags |= ProcSymFlags::IsNoReturn;
+    if (GV->hasFnAttribute(Attribute::NoInline))
+      ProcFlags |= ProcSymFlags::IsNoInline;
+
+    emitDebugInfoForSymbolSubsection(
+        FuncName, ProcKind, ProcFlags, BBId, GV->getSubprogram(),
+        getFuncIdForSubprogram(GV->getSubprogram()).getIndex(),
+        BBSecLabels.BeginLabel, BBSecLabels.EndLabel, FI);
+  }
+}
+
+void CodeViewDebug::emitDebugInfoForFunction(const Function *GV,
+                                             FunctionInfo &FI) {
+  // For each function there is a separate subsection which holds the PC to
+  // file:line table.
+  const MCSymbol *Fn = Asm->getSymbol(GV);
+  assert(Fn);
+
+  // Switch to the to a comdat section, if appropriate.
+  switchToDebugSectionForSymbol(Fn);
+
+  std::string FuncName;
+  auto *SP = GV->getSubprogram();
+  assert(SP);
+  setCurrentSubprogram(SP);
+
+  if (SP->isThunk()) {
+    emitDebugInfoForThunk(GV, FI, Fn);
+    return;
+  }
+
+  // If we have a display name, build the fully qualified name by walking the
+  // chain of scopes.
+  if (!SP->getName().empty())
+    FuncName = getFullyQualifiedName(SP->getScope(), SP->getName());
+
+  // If our DISubprogram name is empty, use the mangled name.
+  if (FuncName.empty())
+    FuncName = std::string(GlobalValue::dropLLVMManglingEscape(GV->getName()));
+
+  // Emit FPO data, but only on 32-bit x86. No other platforms use it.
+  if (Triple(MMI->getModule()->getTargetTriple()).getArch() == Triple::x86)
+    OS.emitCVFPOData(Fn);
+
+  SymbolKind ProcKind = GV->hasLocalLinkage() ? SymbolKind::S_LPROC32_ID
+                                              : SymbolKind::S_GPROC32_ID;
+
+  ProcSymFlags ProcFlags = ProcSymFlags::HasOptimizedDebugInfo;
+  if (FI.HasFramePointer)
+    ProcFlags |= ProcSymFlags::HasFP;
+  if (GV->hasFnAttribute(Attribute::NoReturn))
+    ProcFlags |= ProcSymFlags::IsNoReturn;
+  if (GV->hasFnAttribute(Attribute::NoInline))
+    ProcFlags |= ProcSymFlags::IsNoInline;
+
+  emitDebugInfoForSymbolSubsection(
+      FuncName, ProcKind, ProcFlags, FI.FuncId, SP,
+      getFuncIdForSubprogram(GV->getSubprogram()).getIndex(), Fn, FI.End, FI);
+
+  if (FI.hasBBSections()) {
+    emitDebugInfoForBasicBlockSection(GV, FuncName, FI);
+  }
 }
 
 CodeViewDebug::LocalVarDef
@@ -1482,6 +1616,12 @@ void CodeViewDebug::beginFunctionImpl(const MachineFunction *MF) {
   CurFn = Insertion.first->second.get();
   CurFn->FuncId = NextFuncId++;
   CurFn->Begin = Asm->getFunctionBegin();
+
+  if (MF->hasBBSections()) {
+    CurFn->initializeBasicBlockSections(*MF);
+  }
+
+  NextFuncId = CurFn->getNextFuncId();
 
   // The S_FRAMEPROC record reports the stack size, and how many bytes of
   // callee-saved registers were used. For targets that don't use a PUSH
@@ -2844,6 +2984,38 @@ void CodeViewDebug::emitLocalVariableList(const FunctionInfo &FI,
   }
 }
 
+template <class _DefRangeHdr>
+static void emitCVDefRangeDirective(
+    MCStreamer &OS,
+    ArrayRef<std::pair<const MCSymbol *, const MCSymbol *>> Ranges,
+    _DefRangeHdr DRHdr, bool hasBBSections = false) {
+
+  if (hasBBSections) {
+    auto *associatedCOMDATSym =
+        cast<MCSectionCOFF>(OS.getCurrentSectionOnly())->getCOMDATSymbol();
+    assert(associatedCOMDATSym &&
+           "The current section must have an associated COMDAT!");
+
+    auto &associatedBBSec = associatedCOMDATSym->getSection();
+
+    // NOTE: When BBSections are enabled we only emit the relevant ranges
+    // into each BBSection's associated .debug$S. Otherwise label differences
+    // which are computed by the .cv_def_range directive will be broken.
+    for (auto &r : Ranges) {
+      // NOTE: We currently use the section names as COFF has no UniqueID
+      // attribute unlike ELF. If that changes we can update this accordingly.
+      if (r.first->getSection().getName() == associatedBBSec.getName() &&
+          r.second->getSection().getName() == associatedBBSec.getName()) {
+        OS.emitCVDefRangeDirective({r}, DRHdr);
+      }
+    }
+  } else {
+    // NOTE: When basic block sections aren't used the "Range/Gap" native to the
+    // directive is supported as the label diffs are valid within a section.
+    OS.emitCVDefRangeDirective(Ranges, DRHdr);
+  }
+}
+
 void CodeViewDebug::emitLocalVariable(const FunctionInfo &FI,
                                       const LocalVariable &Var) {
   // LocalSym record, see SymbolRecord.h for more info.
@@ -2896,7 +3068,7 @@ void CodeViewDebug::emitLocalVariable(const FunctionInfo &FI,
                : (EncFP == FI.EncodedLocalFramePtrReg))) {
         DefRangeFramePointerRelHeader DRHdr;
         DRHdr.Offset = Offset;
-        OS.emitCVDefRangeDirective(Ranges, DRHdr);
+        emitCVDefRangeDirective(OS, Ranges, DRHdr, FI.hasBBSections());
       } else {
         uint16_t RegRelFlags = 0;
         if (DefRange.IsSubfield) {
@@ -2908,7 +3080,7 @@ void CodeViewDebug::emitLocalVariable(const FunctionInfo &FI,
         DRHdr.Register = Reg;
         DRHdr.Flags = RegRelFlags;
         DRHdr.BasePointerOffset = Offset;
-        OS.emitCVDefRangeDirective(Ranges, DRHdr);
+        emitCVDefRangeDirective(OS, Ranges, DRHdr, FI.hasBBSections());
       }
     } else {
       assert(DefRange.DataOffset == 0 && "unexpected offset into register");
@@ -2917,12 +3089,12 @@ void CodeViewDebug::emitLocalVariable(const FunctionInfo &FI,
         DRHdr.Register = DefRange.CVRegister;
         DRHdr.MayHaveNoName = 0;
         DRHdr.OffsetInParent = DefRange.StructOffset;
-        OS.emitCVDefRangeDirective(Ranges, DRHdr);
+        emitCVDefRangeDirective(OS, Ranges, DRHdr, FI.hasBBSections());
       } else {
         DefRangeRegisterHeader DRHdr;
         DRHdr.Register = DefRange.CVRegister;
         DRHdr.MayHaveNoName = 0;
-        OS.emitCVDefRangeDirective(Ranges, DRHdr);
+        emitCVDefRangeDirective(OS, Ranges, DRHdr, FI.hasBBSections());
       }
     }
   }
@@ -3068,6 +3240,10 @@ void CodeViewDebug::endFunctionImpl(const MachineFunction *MF) {
   assert(FnDebugInfo.count(&GV));
   assert(CurFn == FnDebugInfo[&GV].get());
 
+  if (MF->hasBBSections()) {
+    CurFn->finalizeBasicBlockSections(*MF, Asm);
+  }
+
   collectVariableInfo(GV.getSubprogram());
 
   // Build the lexical block structure to emit for this routine.
@@ -3149,6 +3325,18 @@ void CodeViewDebug::beginInstruction(const MachineInstr *MI) {
     return;
 
   maybeRecordLocation(DL, Asm->MF);
+}
+
+void CodeViewDebug::beginBasicBlockSection(const MachineBasicBlock &MBB) {
+  // The codeview line table format requires functions are contiguous, if
+  // function has BB sections, all MBBs have their own section, all sections are
+  // not contiguous, emit codeview cv_func_id & cv_loc for each MBB section in
+  // this case. We can omit the function entry block as this is handled by the
+  // normal flow.
+  if (MBB.getParent()->hasBBSections() && MBB.isBeginSection() &&
+      !MBB.isEntryBlock()) {
+    OS.emitCVFuncIdDirective(CurFn->getFuncId(&MBB));
+  }
 }
 
 MCSymbol *CodeViewDebug::beginCVSubsection(DebugSubsectionKind Kind) {

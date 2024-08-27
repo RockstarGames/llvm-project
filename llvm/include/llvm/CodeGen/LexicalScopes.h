@@ -118,6 +118,9 @@ public:
   /// dump - print lexical scope.
   void dump(unsigned Indent = 0) const;
 
+  const MachineInstr *getFirstInsn() const { return FirstInsn; }
+  bool inSameSection(const MachineInstr *MI) const;
+
 private:
   LexicalScope *Parent;                        // Parent to this scope.
   const DILocalScope *Desc;                    // Debug info descriptor.
