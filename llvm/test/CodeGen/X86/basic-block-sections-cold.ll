@@ -12,7 +12,10 @@
 ;;
 ; RUN: llc < %s -mtriple=x86_64 -function-sections -basic-block-sections=%t1 -unique-basic-block-section-names | FileCheck %s -check-prefix=LINUX-SECTIONS
 ; RUN: llc < %s -mtriple=x86_64 -function-sections -basic-block-sections=%t2 -unique-basic-block-section-names | FileCheck %s -check-prefix=LINUX-SECTIONS
-; RUN: llc < %s -mtriple=x86_64 -function-sections -basic-block-sections=%t1 -unique-basic-block-section-names -bbsections-cold-text-prefix=".text.unlikely." | FileCheck %s -check-prefix=LINUX-SPLIT
+; RUN: llc < %s -mtriple=x86_64 -function-sections -basic-block-sections=%t1 -unique-basic-block-section-names -bbsections-cold-text-prefix="unlikely" | FileCheck %s -check-prefix=LINUX-SPLIT
+; RUN: llc < %s -mtriple=x86_64-windows-msvc -function-sections -basic-block-sections=%t1 -unique-basic-block-section-names | FileCheck %s -check-prefix=WINDOWS-SECTIONS
+; RUN: llc < %s -mtriple=x86_64-windows-msvc -function-sections -basic-block-sections=%t2 -unique-basic-block-section-names | FileCheck %s -check-prefix=WINDOWS-SECTIONS
+; RUN: llc < %s -mtriple=x86_64-windows-msvc -function-sections -basic-block-sections=%t1 -unique-basic-block-section-names -bbsections-cold-text-prefix="unlikely" | FileCheck %s -check-prefix=WINDOWS-SPLIT
 
 define void @_Z3bazb(i1 zeroext %0) nounwind {
   br i1 %0, label %2, label %4
@@ -49,3 +52,20 @@ declare i32 @_Z3foov() #1
 ; LINUX-SPLIT-NEXT:   callq _Z3barv
 ; LINUX-SPLIT:      .LBB0_2:
 ; LINUX-SPLIT:      .LBB_END0_2:
+
+; WINDOWS-SECTIONS: .section        .text$hot,"xr",one_only,_Z3bazb
+; WINDOWS-SECTIONS: _Z3bazb:
+; WINDOWS-SECTIONS-NOT: .section        .text$hot,"xr",associative,_Z3bazb
+; WINDOWS-SECTIONS-NOT: .globl Z3bazb.1
+; WINDOWS-SECTIONS: .section	.text$split,"xr",associative,_Z3bazb
+; WINDOWS-SECTIONS: _Z3bazb.cold:
+; WINDOWS-SECTIONS-NOT: .section        .text$hot,"xr",associative,_Z3bazb
+; WINDOWS-SECTIONS-NOT: .globl Z3bazb.2
+; WINDOWS-SECTIONS: .LBB0_2:
+
+; WINDOWS-SPLIT:      .section	.text$unlikely,"xr",associative,_Z3bazb
+; WINDOWS-SPLIT-NEXT: .globl _Z3bazb.cold
+; WINDOWS-SPLIT-NEXT: _Z3bazb.cold:
+; WINDOWS-SPLIT-NEXT:   callq _Z3barv
+; WINDOWS-SPLIT:      .LBB0_2:
+; WINDOWS-SPLIT:      .LBB_END0_2:

@@ -1,9 +1,13 @@
 ; RUN: llc < %s -mtriple=x86_64-pc-linux -basic-block-sections=all | FileCheck %s
 ; RUN: llc < %s -mtriple=x86_64-pc-linux -function-sections -basic-block-sections=all | FileCheck %s
+; RUN: llc < %s -mtriple=x86_64-windows-msvc -basic-block-sections=all | FileCheck %s --check-prefix=MSVC
+; RUN: llc < %s -mtriple=x86_64-windows-msvc -function-sections -basic-block-sections=all | FileCheck %s --check-prefix=MSVC
 ; RUN: echo "!_Z3fooi" > %t.order.txt
 ; RUN: echo "!!2" >> %t.order.txt
 ; RUN: llc < %s -mtriple=x86_64-pc-linux -basic-block-sections=%t.order.txt | FileCheck %s --check-prefix=LIST
 ; RUN: llc < %s -mtriple=x86_64-pc-linux -function-sections -basic-block-sections=%t.order.txt | FileCheck %s --check-prefix=LIST
+; RUN: llc < %s -mtriple=x86_64-windows-msvc -basic-block-sections=%t.order.txt | FileCheck %s --check-prefix=LIST-MSVC
+; RUN: llc < %s -mtriple=x86_64-windows-msvc -function-sections -basic-block-sections=%t.order.txt | FileCheck %s --check-prefix=LIST-MSVC
 
 ; CHECK: .section	foo_section,"ax",@progbits,unique,1
 ; CHECK-LABEL: _Z3fooi:
@@ -18,6 +22,19 @@
 ; LIST-NEXT: _Z3fooi.__part.0:
 ; LIST-NOT: .section	foo_section,"ax",@progbits,unique,3
 
+; MSVC: .section foo_section,"xr"
+; MSVC-LABEL: _Z3fooi:
+; MSVC: .section foo_section$_Z3fooi.__part.1,"xr"
+; MSVC-LABEL: _Z3fooi.__part.1:
+; MSVC: .section foo_section$_Z3fooi.__part.2,"xr"
+; MSVC-LABEL: _Z3fooi.__part.2:
+
+; LIST-MSVC: .section	foo_section$hot,"xr"
+; LIST-MSVC-LABEL: _Z3fooi:
+; LIST-MSVC: .section	foo_section$hot$_Z3fooi.__part.0,"xr"
+; LIST-MSVC: _Z3fooi.__part.0:
+; LIST-MSVC-NOT: .section	foo_section$hot$_Z3fooi.__part.1,"xr"
+
 ;; Source to generate the IR:
 ;; __attribute__((section("foo_section")))
 ;; int foo(int n) {
@@ -26,7 +43,7 @@
 ;;   return 0;
 ;; }
 
-define dso_local i32 @_Z3fooi(i32 %n) local_unnamed_addr section "foo_section" {
+define dso_local i32 @_Z3fooi(i32 %n) local_unnamed_addr nounwind section "foo_section" {
 entry:
   %cmp = icmp slt i32 %n, 0
   br i1 %cmp, label %if.then, label %if.end
@@ -39,4 +56,4 @@ if.end:                                           ; preds = %entry
   ret i32 0
 }
 
-declare dso_local void @exit(i32) local_unnamed_addr
+declare dso_local void @exit(i32) local_unnamed_addr nounwind

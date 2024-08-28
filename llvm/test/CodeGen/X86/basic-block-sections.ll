@@ -3,6 +3,8 @@
 ; RUN: llc < %s -mtriple=x86_64-pc-linux -function-sections -basic-block-sections=all -unique-basic-block-section-names -split-machine-functions | FileCheck %s -check-prefix=LINUX-SECTIONS
 ; RUN: llc < %s -mtriple=i386-unknown-linux-gnu  -function-sections -basic-block-sections=all -unique-basic-block-section-names | FileCheck %s -check-prefix=LINUX-SECTIONS
 ; RUN: llc < %s -mtriple=i386-unknown-linux-gnu  -basic-block-sections=all -unique-basic-block-section-names | FileCheck %s -check-prefix=LINUX-SECTIONS
+; RUN: llc < %s -mtriple=x86_64-windows-msvc -function-sections -basic-block-sections=all -unique-basic-block-section-names | FileCheck %s -check-prefix=WINDOWS-MSVC-FUNCTION-SECTIONS
+; RUN: llc < %s -mtriple=x86_64-windows-msvc -basic-block-sections=all -unique-basic-block-section-names | FileCheck %s -check-prefix=WINDOWS-MSVC-SECTIONS
 
 define void @_Z3bazb(i1 zeroext) nounwind {
   %2 = alloca i8, align 1
@@ -39,3 +41,19 @@ declare i32 @_Z3foov() #1
 ; LINUX-SECTIONS: [[SECTION_LABEL_2]]:
 ; LINUX-SECTIONS: .LBB_END0_2:
 ; LINUX-SECTIONS-NEXT: .size   [[SECTION_LABEL_2]], .LBB_END0_2-[[SECTION_LABEL_2]]
+
+; WINDOWS-MSVC-FUNCTION-SECTIONS: .section        .text,"xr",one_only,[[SECTION_LABEL:_Z3bazb]]
+; WINDOWS-MSVC-FUNCTION-SECTIONS: [[SECTION_LABEL]]:
+; WINDOWS-MSVC-FUNCTION-SECTIONS: .section        .text$[[SECTION_LABEL_1:_Z3bazb.__part.[0-9]+]],"xr",associative,[[SECTION_LABEL]]
+; WINDOWS-MSVC-FUNCTION-SECTIONS-NEXT: .globl [[SECTION_LABEL_1]]
+; WINDOWS-MSVC-FUNCTION-SECTIONS-NEXT: [[SECTION_LABEL_1]]:
+; WINDOWS-MSVC-FUNCTION-SECTIONS: .section        .text$[[SECTION_LABEL_2:_Z3bazb.__part.[0-9]+]],"xr",associative,[[SECTION_LABEL]]
+; WINDOWS-MSVC-FUNCTION-SECTIONS-NEXT: .globl [[SECTION_LABEL_2]]
+; WINDOWS-MSVC-FUNCTION-SECTIONS-NEXT: [[SECTION_LABEL_2]]:
+
+; WINDOWS-MSVC-SECTIONS: .section        .text,"xr"
+; WINDOWS-MSVC-SECTIONS: _Z3bazb:
+; WINDOWS-MSVC-SECTIONS: je              [[SECTION_LABEL_2:_Z3bazb.__part.[0-9]+]]
+; WINDOWS-MSVC-SECTIONS: jmp             [[SECTION_LABEL_1:_Z3bazb.__part.[0-9]+]]
+; WINDOWS-MSVC-SECTIONS: [[SECTION_LABEL_1]]:
+; WINDOWS-MSVC-SECTIONS: [[SECTION_LABEL_2]]:

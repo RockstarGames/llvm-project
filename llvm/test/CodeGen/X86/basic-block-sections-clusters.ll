@@ -17,6 +17,8 @@
 ; 
 ; RUN: llc < %s -O0 -mtriple=x86_64-pc-linux -function-sections -basic-block-sections=%t1 | FileCheck %s -check-prefix=LINUX-SECTIONS1
 ; RUN: llc < %s -O0 -mtriple=x86_64-pc-linux -function-sections -basic-block-sections=%t2 | FileCheck %s -check-prefix=LINUX-SECTIONS1
+; RUN: llc < %s -O0 -mtriple=x86_64-windows-msvc -function-sections -basic-block-sections=%t1 | FileCheck %s -check-prefix=MSVC-SECTIONS1
+; RUN: llc < %s -O0 -mtriple=x86_64-windows-msvc -function-sections -basic-block-sections=%t2 | FileCheck %s -check-prefix=MSVC-SECTIONS1
 ;
 ; Test2: Basic blocks #1 and #3 will be placed in the same section.
 ; All other BBs (including the entry block) go into the function's section.
@@ -27,6 +29,8 @@
 ; RUN: echo 'c 1 3' >> %t4
 ; RUN: llc < %s -O0 -mtriple=x86_64-pc-linux -function-sections -basic-block-sections=%t3 | FileCheck %s -check-prefix=LINUX-SECTIONS2
 ; RUN: llc < %s -O0 -mtriple=x86_64-pc-linux -function-sections -basic-block-sections=%t4 | FileCheck %s -check-prefix=LINUX-SECTIONS2
+; RUN: llc < %s -O0 -mtriple=x86_64-windows-msvc -function-sections -basic-block-sections=%t3 | FileCheck %s -check-prefix=MSVC-SECTIONS2
+; RUN: llc < %s -O0 -mtriple=x86_64-windows-msvc -function-sections -basic-block-sections=%t4 | FileCheck %s -check-prefix=MSVC-SECTIONS2
 
 define void @foo(i1 zeroext) nounwind {
   %2 = alloca i8, align 1
@@ -72,6 +76,18 @@ declare i32 @baz() #1
 ; LINUX-SECTIONS1-LABEL:	.Lfunc_end0:
 ; LINUX-SECTIONS1-NEXT:		.size foo, .Lfunc_end0-foo
 
+; MSVC-SECTIONS1:	   	.section	.text,"xr",one_only,foo
+; MSVC-SECTIONS1-NOT:  	.LBB_END0_{{0-9}}+
+; MSVC-SECTIONS1-LABEL:	foo:
+; MSVC-SECTIONS1:		.section        .text$foo.__part.1,"xr",associative,foo
+; MSVC-SECTIONS1-LABEL:	foo.__part.1:
+; MSVC-SECTIONS1-NOT:  	.LBB_END0_{{0-9}}+
+; MSVC-SECTIONS1:		.section        .text$split,"xr",associative,foo
+; MSVC-SECTIONS1-LABEL:	foo.cold:
+; MSVC-SECTIONS1-LABEL:	.LBB_END0_3:
+; MSVC-SECTIONS1:	   	.section	.text,"xr",one_only,foo
+; MSVC-SECTIONS1-NOT:  	.LBB_END0_{{0-9}}+
+
 ; LINUX-SECTIONS2:		.section        .text.foo,"ax",@progbits
 ; LINUX-SECTIONS2-NOT:   	.section
 ; LINUX-SECTIONS2-LABEL:	foo:
@@ -90,3 +106,12 @@ declare i32 @baz() #1
 ; LINUX-SECTIONS2-NOT:  	.LBB_END0_{{0-9}}+
 ; LINUX-SECTIONS2-LABEL:	.Lfunc_end0:
 ; LINUX-SECTIONS2-NEXT:		.size foo, .Lfunc_end0-foo
+
+; MSVC-SECTIONS2:		.section        .text,"xr",one_only,foo
+; MSVC-SECTIONS2-LABEL:	foo:
+; MSVC-SECTIONS2:		.section        .text$foo.__part.0,"xr",associative,foo
+; MSVC-SECTIONS2-LABEL: foo.__part.0:
+; MSVC-SECTIONS2-LABEL:	.LBB0_3:
+; MSVC-SECTIONS2-LABEL:	.LBB_END0_3:
+; MSVC-SECTIONS2:		.section        .text,"xr",one_only,foo
+; MSVC-SECTIONS2-NOT:  	.LBB_END0_{{0-9}}+

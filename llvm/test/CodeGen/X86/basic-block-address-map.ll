@@ -1,9 +1,11 @@
 ; Check the basic block sections labels option
-; RUN: llc < %s -mtriple=x86_64 -function-sections -unique-section-names=true -basic-block-address-map | FileCheck %s --check-prefixes=CHECK,UNIQ
-; RUN: llc < %s -mtriple=x86_64 -function-sections -unique-section-names=true -basic-block-sections=labels | FileCheck %s --check-prefixes=CHECK,UNIQ
-; RUN: llc < %s -mtriple=x86_64 -function-sections -unique-section-names=false -basic-block-address-map | FileCheck %s --check-prefixes=CHECK,NOUNIQ
-; RUN: llc < %s -mtriple=x86_64 -function-sections -unique-section-names=false -basic-block-sections=labels | FileCheck %s --check-prefixes=CHECK,NOUNIQ
-; RUN: llc < %s -mtriple=x86_64 -function-sections -unique-section-names=true -basic-block-sections=labels -split-machine-functions | FileCheck %s --check-prefixes=CHECK,UNIQ
+; RUN: llc < %s -mtriple=x86_64 -function-sections -unique-section-names=true -basic-block-address-map | FileCheck %s --check-prefixes=CHECK,UNIQ,GNU
+; RUN: llc < %s -mtriple=x86_64 -function-sections -unique-section-names=true -basic-block-sections=labels | FileCheck %s --check-prefixes=CHECK,UNIQ,GNU
+; RUN: llc < %s -mtriple=x86_64 -function-sections -unique-section-names=false -basic-block-address-map | FileCheck %s --check-prefixes=CHECK,NOUNIQ,GNU
+; RUN: llc < %s -mtriple=x86_64 -function-sections -unique-section-names=false -basic-block-sections=labels | FileCheck %s --check-prefixes=CHECK,NOUNIQ,GNU
+; RUN: llc < %s -mtriple=x86_64 -function-sections -unique-section-names=true -basic-block-sections=labels -split-machine-functions | FileCheck %s --check-prefixes=CHECK,UNIQ,GNU
+; RUN: llc < %s -mtriple=x86_64-windows-msvc -function-sections -unique-section-names=true -basic-block-sections=labels | FileCheck %s --check-prefixes=CHECK,MSVC
+; RUN: llc < %s -mtriple=x86_64-windows-msvc -function-sections -unique-section-names=false -basic-block-sections=labels | FileCheck %s --check-prefixes=CHECK,MSVC
 
 define void @_Z3bazb(i1 zeroext, i1 zeroext) personality ptr @__gxx_personality_v0 {
   br i1 %0, label %3, label %8
@@ -38,6 +40,7 @@ declare i32 @__gxx_personality_v0(...)
 
 ; UNIQ:			.section .text._Z3bazb,"ax",@progbits{{$}}
 ; NOUNIQ:		.section .text,"ax",@progbits,unique,1
+; MSVC: .section .text,"xr",one_only,_Z3bazb
 ; CHECK-LABEL:	_Z3bazb:
 ; CHECK-LABEL:	.Lfunc_begin0:
 ; CHECK-LABEL:	.LBB_END0_0:
@@ -52,6 +55,7 @@ declare i32 @__gxx_personality_v0(...)
 ; UNIQ:			.section	.llvm_bb_addr_map,"o",@llvm_bb_addr_map,.text._Z3bazb{{$}}
 ;; Verify that with -unique-section-names=false, the unique id of the text section gets assigned to the llvm_bb_addr_map section.
 ; NOUNIQ:		.section	.llvm_bb_addr_map,"o",@llvm_bb_addr_map,.text,unique,1
+; MSVC:     .section  .llvm_bb_addr_map,"dr",associative,_Z3bazb
 ; CHECK-NEXT:   .byte   2		# version
 ; CHECK-NEXT:   .byte   0		# feature
 ; CHECK-NEXT:	.quad	.Lfunc_begin0	# function address
@@ -79,4 +83,5 @@ declare i32 @__gxx_personality_v0(...)
 ; CHECK-NEXT:   .byte	2		# BB id
 ; CHECK-NEXT:	.uleb128 .LBB0_5-.LBB_END0_4
 ; CHECK-NEXT:	.uleb128 .LBB_END0_5-.LBB0_5
-; CHECK-NEXT:	.byte	5
+; GNU-NEXT:     .byte 5
+; MSVC-NEXT:	  .byte	4
