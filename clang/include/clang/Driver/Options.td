@@ -4223,7 +4223,7 @@ defm basic_block_address_map : BoolFOption<"basic-block-address-map",
   NegFlag<SetFalse>>;
 def fbasic_block_sections_EQ : Joined<["-"], "fbasic-block-sections=">, Group<f_Group>,
   Visibility<[ClangOption, CC1Option, CC1AsOption]>,
-  HelpText<"Place each function's basic blocks in unique sections (ELF Only)">,
+  HelpText<"Place each function's basic blocks in unique sections (ELF and COFF Only)">,
   DocBrief<[{Generate labels for each basic block or place each basic block or a subset of basic blocks in its own section.}]>,
   Values<"all,labels,none,list=">,
   MarshallingInfoString<CodeGenOpts<"BBSections">, [{"none"}]>;
@@ -4247,7 +4247,7 @@ def stack_usage_file : Separate<["-"], "stack-usage-file">,
 defm unique_basic_block_section_names : BoolFOption<"unique-basic-block-section-names",
   CodeGenOpts<"UniqueBasicBlockSectionNames">, DefaultFalse,
   PosFlag<SetTrue, [], [ClangOption, CC1Option],
-          "Use unique names for basic block sections (ELF Only)">,
+          "Use unique names for basic block sections (ELF and COFF Only)">,
   NegFlag<SetFalse>>;
 defm unique_internal_linkage_names : BoolFOption<"unique-internal-linkage-names",
   CodeGenOpts<"UniqueInternalLinkageNames">, DefaultFalse,

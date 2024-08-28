@@ -6224,7 +6224,8 @@ void Clang::ConstructJob(Compilation &C, const JobAction &JA,
 
   if (Arg *A = Args.getLastArg(options::OPT_fbasic_block_sections_EQ)) {
     StringRef Val = A->getValue();
-    if (Triple.isX86() && Triple.isOSBinFormatELF()) {
+    if (Triple.isX86() && 
+        (Triple.isOSBinFormatELF() || Triple.isOSBinFormatCOFF())) {
       if (Val != "all" && Val != "labels" && Val != "none" &&
           !Val.starts_with("list="))
         D.Diag(diag::err_drv_invalid_value)
