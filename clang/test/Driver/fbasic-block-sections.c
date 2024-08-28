@@ -16,6 +16,7 @@
 // RUN: %clang -### --target=x86_64 -fbasic-block-sections=none %s -S 2>&1 | FileCheck -check-prefix=CHECK-OPT-NONE %s
 // RUN: %clang -### -x cuda -nocudainc -nocudalib --target=x86_64 -fbasic-block-sections=all --cuda-path=%S/Inputs/CUDA/usr/local/cuda %s -c 2>&1 \
 // RUN:   | FileCheck -check-prefix=CHECK-CUDA %s
+// RUN: %clang -### -target x86_64-windows-msvc -fbasic-block-sections=all %s -S 2>&1 | FileCheck -check-prefix=CHECK-OPT-ALL %s
 
 //
 // CHECK-NOOPT-NOT:  -fbasic-block-sections=
