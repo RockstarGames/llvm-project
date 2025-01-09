@@ -58,6 +58,8 @@ code bases.
   containing strict-aliasing violations. The new default behavior can be
   disabled using ``-fno-pointer-tbaa``.
 
+- The default extension for time trace files using the ``-ftime-trace`` flag is now ``.time-trace.json``.
+
 C/C++ Language Potentially Breaking Changes
 -------------------------------------------
 

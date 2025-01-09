@@ -91,6 +91,7 @@
 #include "llvm/Support/Program.h"
 #include "llvm/Support/Regex.h"
 #include "llvm/Support/StringSaver.h"
+#include "llvm/Support/TimeProfiler.h"
 #include "llvm/Support/VirtualFileSystem.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/TargetParser/Host.h"
@@ -5664,19 +5665,19 @@ static void handleTimeTrace(Compilation &C, const ArgList &Args,
     Path = A->getValue();
     if (llvm::sys::fs::is_directory(Path)) {
       SmallString<128> Tmp(Result.getFilename());
-      llvm::sys::path::replace_extension(Tmp, "json");
+      llvm::sys::path::replace_extension(Tmp, llvm::TimeTraceFileExtension);
       llvm::sys::path::append(Path, llvm::sys::path::filename(Tmp));
     }
   } else {
     if (Arg *DumpDir = Args.getLastArgNoClaim(options::OPT_dumpdir)) {
-      // The trace file is ${dumpdir}${basename}.json. Note that dumpdir may not
-      // end with a path separator.
+      // The trace file is ${dumpdir}${basename}.${TimeTraceFileExtension}. Note
+      // that dumpdir may not end with a path separator.
       Path = DumpDir->getValue();
       Path += llvm::sys::path::filename(BaseInput);
     } else {
       Path = Result.getFilename();
     }
-    llvm::sys::path::replace_extension(Path, "json");
+    llvm::sys::path::replace_extension(Path, llvm::TimeTraceFileExtension);
   }
   const char *ResultFile = C.getArgs().MakeArgString(Path);
   C.addTimeTraceFile(ResultFile, JA);
