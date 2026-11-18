@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-label="$FLAMINGO - crypto economy concept for Leonida">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d0221"/><stop offset=".4" stop-color="#3a0f6b"/><stop offset=".72" stop-color="#ff2e93"/><stop offset="1" stop-color="#ff9a1f"/>
+    </linearGradient>
+    <linearGradient id="sun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe14d"/><stop offset="1" stop-color="#ff2e93"/></linearGradient>
+    <linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#ffd9ee"/><stop offset=".52" stop-color="#ff2e93"/><stop offset="1" stop-color="#7b2ff7"/>
+    </linearGradient>
+    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a0a52"/><stop offset="1" stop-color="#0d0221"/></linearGradient>
+    <linearGradient id="flg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9fd0"/><stop offset="1" stop-color="#ff2e93"/></linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <filter id="glow" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="glowS" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="soft" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="3"/></filter>
+    <mask id="sunmask">
+      <rect width="1200" height="420" fill="#fff"/>
+      <rect x="480" y="240" width="240" height="2" fill="#000"><animate attributeName="height" values="2;6;2" dur="4s" repeatCount="indefinite"/></rect>
+      <rect x="480" y="258" width="240" height="4" fill="#000"><animate attributeName="height" values="4;9;4" dur="4s" repeatCount="indefinite"/></rect>
+      <rect x="480" y="275" width="240" height="6" fill="#000"><animate attributeName="height" values="6;12;6" dur="4s" repeatCount="indefinite"/></rect>
+      <rect x="480" y="291" width="240" height="8" fill="#000"><animate attributeName="height" values="8;14;8" dur="4s" repeatCount="indefinite"/></rect>
+    </mask>
+    <clipPath id="floorclip"><rect x="0" y="300" width="1200" height="120"/></clipPath>
+    <clipPath id="titleclip"><rect x="300" y="120" width="600" height="140"/></clipPath>
+    <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="1" fill="#000" opacity=".16"/></pattern>
+    <radialGradient id="vig" cx=".5" cy=".5" r=".75"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".6"/></radialGradient>
+    <g id="fl">
+      <path d="M70 90 C90 82 72 58 82 42 C88 32 80 24 70 26" fill="none" stroke="url(#flg)" stroke-width="7" stroke-linecap="round"/>
+      <path d="M50 112 L48 152 M43 152 L54 152" stroke="#ff4fa0" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M60 112 L64 132 L53 139" stroke="#ff4fa0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <ellipse cx="46" cy="96" rx="32" ry="19" fill="url(#flg)" transform="rotate(-8 46 96)"/>
+      <path d="M22 92 Q42 78 70 92 Q50 112 22 92Z" fill="#d81b7a" opacity=".85"/>
+      <path d="M16 94 Q3 98 5 113 Q18 109 25 100Z" fill="#ff5fae"/>
+      <circle cx="68" cy="26" r="7.5" fill="url(#flg)"/>
+      <path d="M62 22 Q50 22 47 32 Q55 29 63 30Z" fill="#ffc2e0"/>
+      <path d="M47 32 Q49 27 53 25 Q51 30 47 32Z" fill="#1a0838"/>
+      <circle cx="70" cy="24" r="1.8" fill="#0d0221"/>
+    </g>
+  </defs>
+
+  <rect width="1200" height="420" fill="url(#sky)"/>
+
+  <g fill="#fff">
+    <circle cx="90" cy="40" r="1.6"><animate attributeName="opacity" values=".2;1;.2" dur="3s" repeatCount="indefinite"/></circle>
+    <circle cx="210" cy="90" r="1.2"><animate attributeName="opacity" values="1;.2;1" dur="2.4s" repeatCount="indefinite"/></circle>
+    <circle cx="330" cy="30" r="1.8"><animate attributeName="opacity" values=".3;1;.3" dur="3.6s" repeatCount="indefinite"/></circle>
+    <circle cx="470" cy="70" r="1.2"><animate attributeName="opacity" values="1;.3;1" dur="2.8s" repeatCount="indefinite"/></circle>
+    <circle cx="760" cy="48" r="1.6"><animate attributeName="opacity" values=".2;1;.2" dur="3.2s" repeatCount="indefinite"/></circle>
+    <circle cx="880" cy="96" r="1.2"><animate attributeName="opacity" values="1;.2;1" dur="2.2s" repeatCount="indefinite"/></circle>
+    <circle cx="1010" cy="36" r="1.8"><animate attributeName="opacity" values=".3;1;.3" dur="3.8s" repeatCount="indefinite"/></circle>
+    <circle cx="1120" cy="84" r="1.4"><animate attributeName="opacity" values="1;.3;1" dur="2.6s" repeatCount="indefinite"/></circle>
+    <circle cx="640" cy="22" r="1.2"><animate attributeName="opacity" values=".3;1;.3" dur="4s" repeatCount="indefinite"/></circle>
+    <circle cx="150" cy="150" r="1.2"><animate attributeName="opacity" values="1;.2;1" dur="3.1s" repeatCount="indefinite"/></circle>
+    <rect x="0" y="0" width="70" height="2" rx="1" opacity="0" transform="rotate(25)">
+      <animate attributeName="opacity" values="0;0;.9;0;0" keyTimes="0;.6;.65;.7;1" dur="9s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="translate" values="300 40;700 240" dur="9s" repeatCount="indefinite" additive="sum"/>
+    </rect>
+  </g>
+
+  <g fill="none" stroke="#1a0838" stroke-width="2.4" stroke-linecap="round" opacity=".8">
+    <path d="M0 0 q6 -7 12 0 q6 -7 12 0"><animateTransform attributeName="transform" type="translate" values="-60 110;1260 70" dur="26s" repeatCount="indefinite"/></path>
+    <path d="M0 0 q5 -6 10 0 q5 -6 10 0"><animateTransform attributeName="transform" type="translate" values="-100 135;1260 100" dur="30s" begin="-8s" repeatCount="indefinite"/></path>
+    <path d="M0 0 q4 -5 8 0 q4 -5 8 0"><animateTransform attributeName="transform" type="translate" values="-30 90;1260 130" dur="34s" begin="-18s" repeatCount="indefinite"/></path>
+  </g>
+
+  <g mask="url(#sunmask)">
+    <circle cx="600" cy="235" r="124" fill="#ff2e93" opacity=".5" filter="url(#soft)"><animate attributeName="opacity" values=".5;.7;.5" dur="5s" repeatCount="indefinite"/></circle>
+    <circle cx="600" cy="235" r="105" fill="url(#sun)"/>
+  </g>
+
+  <g fill="#1a0838">
+    <rect x="40" y="235" width="40" height="65"/><rect x="85" y="260" width="30" height="40"/>
+    <rect x="120" y="225" width="36" height="75"/><rect x="165" y="250" width="28" height="50"/>
+    <rect x="200" y="240" width="34" height="60"/><rect x="240" y="265" width="30" height="35"/>
+    <rect x="278" y="248" width="26" height="52"/><rect x="326" y="215" width="26" height="85"/><rect x="356" y="245" width="30" height="55"/>
+    <rect x="814" y="240" width="30" height="60"/><rect x="848" y="220" width="28" height="80"/>
+    <rect x="900" y="245" width="36" height="55"/><rect x="942" y="225" width="30" height="75"/>
+    <rect x="978" y="255" width="34" height="45"/><rect x="1018" y="238" width="38" height="62"/>
+    <rect x="1062" y="262" width="28" height="38"/><rect x="1096" y="232" width="36" height="68"/><rect x="1138" y="250" width="40" height="50"/>
+  </g>
+  <g fill="#00e5ff">
+    <rect x="130" y="238" width="4" height="5"><animate attributeName="opacity" values="1;0;1" dur="3s" repeatCount="indefinite"/></rect>
+    <rect x="336" y="228" width="4" height="5"><animate attributeName="opacity" values="0;1;0" dur="2.5s" repeatCount="indefinite"/></rect>
+    <rect x="858" y="234" width="4" height="5"><animate attributeName="opacity" values="1;0;1" dur="3.4s" repeatCount="indefinite"/></rect>
+    <rect x="952" y="240" width="4" height="5"><animate attributeName="opacity" values="0;1;0" dur="2.9s" repeatCount="indefinite"/></rect>
+    <rect x="1106" y="246" width="4" height="5"><animate attributeName="opacity" values="1;0;1" dur="2.2s" repeatCount="indefinite"/></rect>
+  </g>
+  <g fill="#ff2e93" opacity=".9"><rect x="330" y="212" width="18" height="3"><animate attributeName="opacity" values="1;.2;1" dur="1.4s" repeatCount="indefinite"/></rect><rect x="852" y="217" width="20" height="3"><animate attributeName="opacity" values=".2;1;.2" dur="1.8s" repeatCount="indefinite"/></rect></g>
+
+  <rect x="0" y="300" width="1200" height="120" fill="url(#floor)"/>
+  <g clip-path="url(#floorclip)" stroke="#ff2e93" stroke-width="1.4" opacity=".75">
+    <line x1="600" y1="300" x2="-200" y2="420"/><line x1="600" y1="300" x2="-70" y2="420"/><line x1="600" y1="300" x2="60" y2="420"/><line x1="600" y1="300" x2="190" y2="420"/>
+    <line x1="600" y1="300" x2="320" y2="420"/><line x1="600" y1="300" x2="450" y2="420"/><line x1="600" y1="300" x2="580" y2="420"/><line x1="600" y1="300" x2="620" y2="420"/>
+    <line x1="600" y1="300" x2="750" y2="420"/><line x1="600" y1="300" x2="880" y2="420"/><line x1="600" y1="300" x2="1010" y2="420"/><line x1="600" y1="300" x2="1140" y2="420"/>
+    <line x1="600" y1="300" x2="1270" y2="420"/><line x1="600" y1="300" x2="1400" y2="420"/>
+    <g stroke="#00e5ff">
+      <line x1="0" y1="300" x2="1200" y2="300"><animateTransform attributeName="transform" type="translate" values="0 0;0 120" keyTimes="0;1" dur="3s" begin="0s" repeatCount="indefinite" calcMode="spline" keySplines=".6 0 1 1"/></line>
+      <line x1="0" y1="300" x2="1200" y2="300"><animateTransform attributeName="transform" type="translate" values="0 0;0 120" keyTimes="0;1" dur="3s" begin="-0.5s" repeatCount="indefinite" calcMode="spline" keySplines=".6 0 1 1"/></line>
+      <line x1="0" y1="300" x2="1200" y2="300"><animateTransform attributeName="transform" type="translate" values="0 0;0 120" keyTimes="0;1" dur="3s" begin="-1s" repeatCount="indefinite" calcMode="spline" keySplines=".6 0 1 1"/></line>
+      <line x1="0" y1="300" x2="1200" y2="300"><animateTransform attributeName="transform" type="translate" values="0 0;0 120" keyTimes="0;1" dur="3s" begin="-1.5s" repeatCount="indefinite" calcMode="spline" keySplines=".6 0 1 1"/></line>
+      <line x1="0" y1="300" x2="1200" y2="300"><animateTransform attributeName="transform" type="translate" values="0 0;0 120" keyTimes="0;1" dur="3s" begin="-2s" repeatCount="indefinite" calcMode="spline" keySplines=".6 0 1 1"/></line>
+      <line x1="0" y1="300" x2="1200" y2="300"><animateTransform attributeName="transform" type="translate" values="0 0;0 120" keyTimes="0;1" dur="3s" begin="-2.5s" repeatCount="indefinite" calcMode="spline" keySplines=".6 0 1 1"/></line>
+    </g>
+  </g>
+  <rect x="0" y="298" width="1200" height="3" fill="#ff9a1f" filter="url(#soft)"/>
+
+  <g fill="none" stroke="#08011a" stroke-linecap="round">
+    <g transform="translate(120 420)">
+      <animateTransform attributeName="transform" type="rotate" additive="sum" values="-1 0 0;1.6 0 0;-1 0 0" dur="6s" repeatCount="indefinite"/>
+      <path d="M0 0 C14 -90 -8 -170 26 -250" stroke-width="9"/>
+      <path d="M26 -250 Q70 -290 120 -250 M26 -250 Q60 -320 130 -310 M26 -250 Q-10 -300 -70 -270 M26 -250 Q-20 -330 -80 -330 M26 -250 Q90 -250 140 -200 M26 -250 Q-30 -240 -80 -190" stroke-width="6"/>
+    </g>
+    <g transform="translate(1080 420) scale(-1 1)">
+      <animateTransform attributeName="transform" type="rotate" additive="sum" values="1 0 0;-1.6 0 0;1 0 0" dur="7s" repeatCount="indefinite"/>
+      <path d="M0 0 C14 -90 -8 -170 26 -250" stroke-width="9"/>
+      <path d="M26 -250 Q70 -290 120 -250 M26 -250 Q60 -320 130 -310 M26 -250 Q-10 -300 -70 -270 M26 -250 Q-20 -330 -80 -330 M26 -250 Q90 -250 140 -200 M26 -250 Q-30 -240 -80 -190" stroke-width="6"/>
+    </g>
+  </g>
+
+  <g transform="translate(205 262) scale(1.05)" filter="url(#glowS)">
+    <animateTransform attributeName="transform" type="translate" additive="sum" values="0 0;0 -5;0 0" dur="3.2s" repeatCount="indefinite"/>
+    <use href="#fl"/>
+  </g>
+  <g transform="translate(1000 270) scale(-.9 .9)" filter="url(#glowS)">
+    <animateTransform attributeName="transform" type="translate" additive="sum" values="0 0;0 -4;0 0" dur="3.8s" begin="-1.2s" repeatCount="indefinite"/>
+    <use href="#fl"/>
+  </g>
+
+  <g transform="translate(600 238) skewX(-8)" font-family="Impact,'Arial Black','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="112" text-anchor="middle" letter-spacing="2">
+    <text x="0" y="0" fill="#ff2e93" filter="url(#glow)" opacity=".9">$FLAMINGO</text>
+    <text x="0" y="0" fill="#00e5ff" opacity=".8"><animate attributeName="x" values="0;0;-6;5;0;0" keyTimes="0;.88;.9;.93;.95;1" dur="5s" repeatCount="indefinite"/>$FLAMINGO</text>
+    <text x="0" y="0" fill="#ff2e93" opacity=".8"><animate attributeName="x" values="0;0;6;-5;0;0" keyTimes="0;.88;.9;.93;.95;1" dur="5s" repeatCount="indefinite"/>$FLAMINGO</text>
+    <text x="0" y="0" fill="#0b0220" stroke="#0b0220" stroke-width="12" stroke-linejoin="round">$FLAMINGO</text>
+    <text x="0" y="0" fill="url(#chrome)" stroke="#00e5ff" stroke-width="2">$FLAMINGO</text>
+  </g>
+  <g clip-path="url(#titleclip)">
+    <rect x="0" y="110" width="90" height="160" fill="url(#shine)" transform="skewX(-20)" opacity=".7">
+      <animate attributeName="x" values="150;1000" keyTimes="0;1" dur="5s" begin="1s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <g font-family="Consolas,'Courier New',monospace" text-anchor="middle">
+    <text x="600" y="345" font-size="22" font-weight="700" letter-spacing="10" fill="#00e5ff" filter="url(#glowS)">CRYPTO ECONOMY // LEONIDA</text>
+    <text x="600" y="380" font-size="14" letter-spacing="6" fill="#ff9a1f">WALLET  /  EXCHANGE  /  BLACK MARKET  /  HEISTS</text>
+  </g>
+  <text x="1172" y="34" text-anchor="end" font-family="Consolas,'Courier New',monospace" font-size="12" letter-spacing="3" fill="#ffffff" opacity=".75">v0.2 DRAFT<animate attributeName="opacity" values=".75;.25;.75" dur="2s" repeatCount="indefinite"/></text>
+
+  <rect width="1200" height="420" fill="url(#scan)"><animateTransform attributeName="transform" type="translate" values="0 0;0 4" dur=".5s" repeatCount="indefinite"/></rect>
+  <rect width="1200" height="420" fill="url(#vig)"/>
+</svg>

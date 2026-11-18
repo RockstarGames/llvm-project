@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 44" width="1200" height="44" role="presentation">
+  <defs>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7b2ff7" stop-opacity="0"/><stop offset=".2" stop-color="#7b2ff7"/><stop offset=".5" stop-color="#ff2e93"/><stop offset=".8" stop-color="#ff9a1f"/><stop offset="1" stop-color="#ff9a1f" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="spark" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#00e5ff" stop-opacity="0"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#00e5ff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="flg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9fd0"/><stop offset="1" stop-color="#ff2e93"/></linearGradient>
+    <filter id="glow" x="-10%" y="-400%" width="120%" height="900%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <g id="fl">
+      <path d="M70 90 C90 82 72 58 82 42 C88 32 80 24 70 26" fill="none" stroke="url(#flg)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M50 112 L48 152 M60 112 L64 132 L53 139" stroke="#ff4fa0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <ellipse cx="46" cy="96" rx="32" ry="19" fill="url(#flg)" transform="rotate(-8 46 96)"/>
+      <path d="M16 94 Q3 98 5 113 Q18 109 25 100Z" fill="#ff5fae"/>
+      <circle cx="68" cy="26" r="8" fill="url(#flg)"/>
+      <path d="M62 22 Q50 22 47 32 Q55 29 63 30Z" fill="#ffc2e0"/>
+    </g>
+  </defs>
+  <rect x="0" y="20" width="1200" height="4" rx="2" fill="url(#line)" filter="url(#glow)"/>
+  <rect x="-200" y="19" width="200" height="6" rx="3" fill="url(#spark)" filter="url(#glow)"><animate attributeName="x" values="-200;1200" dur="3.2s" repeatCount="indefinite"/></rect>
+  <circle cx="600" cy="22" r="19" fill="#0d0221" stroke="#00e5ff" stroke-width="1.5" stroke-dasharray="3 5"><animateTransform attributeName="transform" type="rotate" values="0 600 22;360 600 22" dur="12s" repeatCount="indefinite"/></circle>
+  <g transform="translate(590 8) scale(.2)" filter="url(#glow)">
+    <animateTransform attributeName="transform" type="translate" additive="sum" values="0 0;0 -20;0 0" dur="2.4s" repeatCount="indefinite"/>
+    <use href="#fl"/>
+  </g>
+</svg>

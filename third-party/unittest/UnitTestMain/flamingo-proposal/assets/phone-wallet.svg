@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 360 720" width="360" height="720" role="img" aria-label="In-game $FLAMINGO wallet app mockup">
+  <defs>
+    <linearGradient id="scr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a0a52"/><stop offset="1" stop-color="#0d0221"/></linearGradient>
+    <linearGradient id="num" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffe14d"/><stop offset=".6" stop-color="#ff9a1f"/><stop offset="1" stop-color="#ff2e93"/></linearGradient>
+    <linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00ffa3" stop-opacity=".35"/><stop offset="1" stop-color="#00ffa3" stop-opacity="0"/></linearGradient>
+    <linearGradient id="btn" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7b2ff7"/><stop offset="1" stop-color="#ff2e93"/></linearGradient>
+    <linearGradient id="flg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9fd0"/><stop offset="1" stop-color="#ff2e93"/></linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <clipPath id="screen"><rect x="24" y="24" width="312" height="672" rx="36"/></clipPath>
+    <g id="fl">
+      <path d="M70 90 C90 82 72 58 82 42 C88 32 80 24 70 26" fill="none" stroke="url(#flg)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M50 112 L48 152 M60 112 L64 132 L53 139" stroke="#ff4fa0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <ellipse cx="46" cy="96" rx="32" ry="19" fill="url(#flg)" transform="rotate(-8 46 96)"/>
+      <path d="M16 94 Q3 98 5 113 Q18 109 25 100Z" fill="#ff5fae"/>
+      <circle cx="68" cy="26" r="8" fill="url(#flg)"/>
+      <path d="M62 22 Q50 22 47 32 Q55 29 63 30Z" fill="#ffc2e0"/>
+    </g>
+  </defs>
+
+  <rect x="10" y="10" width="340" height="700" rx="48" fill="#08011a" stroke="#ff2e93" stroke-width="3" filter="url(#glow)"><animate attributeName="stroke-opacity" values="1;.55;1" dur="3s" repeatCount="indefinite"/></rect>
+  <rect x="24" y="24" width="312" height="672" rx="36" fill="url(#scr)"/>
+
+  <g clip-path="url(#screen)" font-family="Consolas,'Courier New',monospace">
+    <rect x="130" y="34" width="100" height="22" rx="11" fill="#000"/>
+    <text x="48" y="52" font-size="12" font-weight="700" fill="#fff">21:12</text>
+    <rect x="288" y="43" width="24" height="10" rx="3" fill="none" stroke="#fff" stroke-width="1.2"/><rect x="290" y="45" width="15" height="6" rx="1.5" fill="#00ffa3"/>
+
+    <g transform="translate(40 76) scale(.17)"><animateTransform attributeName="transform" type="translate" additive="sum" values="0 0;0 -20;0 0" dur="2.8s" repeatCount="indefinite"/><use href="#fl"/></g>
+    <text x="72" y="100" font-size="13" font-weight="700" letter-spacing="4" fill="#00e5ff">WALLET</text>
+    <text x="72" y="116" font-size="10" fill="#9d8ab8">LEONIDA NETWORK · SIMULATED</text>
+    <circle cx="308" cy="98" r="5" fill="#00ffa3"><animate attributeName="opacity" values="1;.2;1" dur="1.6s" repeatCount="indefinite"/></circle>
+
+    <text x="44" y="172" font-size="42" font-weight="700" fill="url(#num)" filter="url(#glow)">12,480.50</text>
+    <text x="44" y="194" font-size="13" font-weight="700" letter-spacing="3" fill="#ff5fae">$FLAMINGO</text>
+    <text x="316" y="194" text-anchor="end" font-size="12" font-weight="700" fill="#00ffa3">▲ 3.42% 24h</text>
+
+    <rect x="44" y="214" width="272" height="140" rx="16" fill="#ffffff" fill-opacity=".04" stroke="#ffffff" stroke-opacity=".15"/>
+    <g stroke="#ffffff" stroke-opacity=".08"><line x1="54" y1="250" x2="306" y2="250"/><line x1="54" y1="285" x2="306" y2="285"/><line x1="54" y1="320" x2="306" y2="320"/></g>
+    <path d="M54 336 L90 316 L120 326 L150 290 L185 300 L215 262 L250 276 L285 240 L306 246 L306 346 L54 346 Z" fill="url(#area)"/>
+    <path id="trend" d="M54 336 L90 316 L120 326 L150 290 L185 300 L215 262 L250 276 L285 240 L306 246" fill="none" stroke="#00ffa3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="330" stroke-dashoffset="330" filter="url(#glow)">
+      <animate attributeName="stroke-dashoffset" values="330;0;0;330" keyTimes="0;.4;.9;1" dur="6s" repeatCount="indefinite"/>
+    </path>
+    <circle r="5" fill="#fff" filter="url(#glow)"><animateMotion dur="6s" repeatCount="indefinite" keyPoints="0;1;1;0" keyTimes="0;.4;.9;1" calcMode="linear"><mpath xlink:href="#trend" href="#trend"/></animateMotion></circle>
+
+    <rect x="44" y="374" width="84" height="44" rx="12" fill="url(#btn)"/><text x="86" y="401" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">SEND</text>
+    <rect x="138" y="374" width="84" height="44" rx="12" fill="url(#btn)"><animate attributeName="opacity" values="1;.7;1" dur="2s" repeatCount="indefinite"/></rect><text x="180" y="401" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">SWAP</text>
+    <rect x="232" y="374" width="84" height="44" rx="12" fill="none" stroke="#00e5ff" stroke-width="2"/><text x="274" y="401" text-anchor="middle" font-size="13" font-weight="700" fill="#00e5ff">STASH</text>
+
+    <text x="44" y="458" font-size="12" font-weight="700" letter-spacing="3" fill="#9d8ab8">ATTIVITÀ</text>
+    <g><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.1;.9;1" dur="8s" repeatCount="indefinite"/>
+      <rect x="44" y="472" width="272" height="56" rx="12" fill="#ffffff" fill-opacity=".05"/>
+      <circle cx="68" cy="500" r="14" fill="#00ffa3" fill-opacity=".2" stroke="#00ffa3"/><text x="68" y="505" text-anchor="middle" font-size="14" fill="#00ffa3">+</text>
+      <text x="92" y="496" font-size="12" font-weight="700" fill="#fff">Payout · Marina job</text><text x="92" y="512" font-size="10" fill="#9d8ab8">2 min fa</text>
+      <text x="304" y="502" text-anchor="end" font-size="13" font-weight="700" fill="#00ffa3">+2,500.00</text></g>
+    <g><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.15;.25;.9;1" dur="8s" repeatCount="indefinite"/>
+      <rect x="44" y="536" width="272" height="56" rx="12" fill="#ffffff" fill-opacity=".05"/>
+      <circle cx="68" cy="564" r="14" fill="#ff9a1f" fill-opacity=".2" stroke="#ff9a1f"/><text x="68" y="569" text-anchor="middle" font-size="14" fill="#ff9a1f">⇄</text>
+      <text x="92" y="560" font-size="12" font-weight="700" fill="#fff">Swap → USD (kiosk)</text><text x="92" y="576" font-size="10" fill="#9d8ab8">1 h fa</text>
+      <text x="304" y="566" text-anchor="end" font-size="13" font-weight="700" fill="#ff4d6d">-800.00</text></g>
+    <g><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.3;.4;.9;1" dur="8s" repeatCount="indefinite"/>
+      <rect x="44" y="600" width="272" height="56" rx="12" fill="#ffffff" fill-opacity=".05"/>
+      <circle cx="68" cy="628" r="14" fill="#7b2ff7" fill-opacity=".25" stroke="#7b2ff7"/><text x="68" y="633" text-anchor="middle" font-size="14" fill="#c9a8ff">⌂</text>
+      <text x="92" y="624" font-size="12" font-weight="700" fill="#fff">Rent · Keys safehouse</text><text x="92" y="640" font-size="10" fill="#9d8ab8">Ieri</text>
+      <text x="304" y="630" text-anchor="end" font-size="13" font-weight="700" fill="#ff4d6d">-150.00</text></g>
+
+    <rect x="130" y="682" width="100" height="4" rx="2" fill="#fff" fill-opacity=".5"/>
+
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 -90;0 -90;0 0;0 0;0 -90" keyTimes="0;.05;.12;.3;.38" dur="8s" repeatCount="indefinite"/>
+      <rect x="40" y="66" width="280" height="44" rx="14" fill="#0d0221" stroke="#00ffa3" stroke-width="2" filter="url(#glow)"/>
+      <text x="180" y="93" text-anchor="middle" font-size="12" font-weight="700" fill="#00ffa3">+2,500 $FLAMINGO · PAYOUT RECEIVED</text>
+    </g>
+  </g>
+</svg>

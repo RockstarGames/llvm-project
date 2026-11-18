@@ -1,0 +1,43 @@
+{
+  "$comment": "Single source of truth for the currency branding. Change here, then follow 'Procedura di rename' in README.md.",
+  "token": {
+    "name": "FLAMINGO",
+    "symbol": "FLAMINGO",
+    "display": "$FLAMINGO",
+    "decimals": 2,
+    "placeholder": false
+  },
+  "universe": {
+    "region": "Leonida",
+    "primary_city": "Vice City",
+    "note": "Unofficial fan concept. Not affiliated with Rockstar Games or Take-Two Interactive."
+  },
+  "palette": {
+    "night": "#0D0221",
+    "violet": "#7B2FF7",
+    "flamingo_pink": "#FF2E93",
+    "sunset": "#FF9A1F",
+    "sun": "#FFE14D",
+    "neon_cyan": "#00E5FF",
+    "profit": "#00FFA3",
+    "loss": "#FF4D6D"
+  },
+  "typography": {
+    "display": "Impact, 'Arial Black', sans-serif",
+    "data": "Consolas, 'Courier New', monospace",
+    "display_skew_deg": -8
+  },
+  "motion": {
+    "ambient_seconds": [
+      3,
+      8
+    ],
+    "ui_action_seconds_max": 0.4,
+    "respect_reduced_motion": true
+  },
+  "mascot": {
+    "name": "flamingo",
+    "asset": "assets/flamingo-mark.svg",
+    "original_artwork": true
+  }
+}

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 260" width="240" height="260" role="img" aria-label="$FLAMINGO coin">
+  <defs>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe14d"/><stop offset=".5" stop-color="#ff9a1f"/><stop offset="1" stop-color="#ff2e93"/></linearGradient>
+    <linearGradient id="face" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a0f6b"/><stop offset="1" stop-color="#0d0221"/></linearGradient>
+    <linearGradient id="flg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9fd0"/><stop offset="1" stop-color="#ff2e93"/></linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".6"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <clipPath id="faceclip"><circle r="80"/></clipPath>
+    <path id="ringpath" d="M-60 0 A60 60 0 1 1 60 0 A60 60 0 1 1 -60 0"/>
+    <g id="fl">
+      <path d="M70 90 C90 82 72 58 82 42 C88 32 80 24 70 26" fill="none" stroke="url(#flg)" stroke-width="7" stroke-linecap="round"/>
+      <path d="M50 112 L48 152 M43 152 L54 152" stroke="#ff4fa0" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M60 112 L64 132 L53 139" stroke="#ff4fa0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <ellipse cx="46" cy="96" rx="32" ry="19" fill="url(#flg)" transform="rotate(-8 46 96)"/>
+      <path d="M22 92 Q42 78 70 92 Q50 112 22 92Z" fill="#d81b7a" opacity=".85"/>
+      <path d="M16 94 Q3 98 5 113 Q18 109 25 100Z" fill="#ff5fae"/>
+      <circle cx="68" cy="26" r="7.5" fill="url(#flg)"/>
+      <path d="M62 22 Q50 22 47 32 Q55 29 63 30Z" fill="#ffc2e0"/>
+      <path d="M47 32 Q49 27 53 25 Q51 30 47 32Z" fill="#1a0838"/>
+      <circle cx="70" cy="24" r="1.8" fill="#0d0221"/>
+    </g>
+  </defs>
+
+  <ellipse cx="120" cy="238" rx="60" ry="9" fill="#ff2e93" opacity=".35">
+    <animate attributeName="rx" values="60;46;60" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values=".35;.15;.35" dur="3s" repeatCount="indefinite"/>
+  </ellipse>
+
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0;0 -10;0 0" dur="3s" repeatCount="indefinite" calcMode="spline" keyTimes="0;.5;1" keySplines=".4 0 .6 1;.4 0 .6 1"/>
+    <g transform="translate(120 120)">
+      <g filter="url(#glow)">
+        <animateTransform attributeName="transform" type="scale" values="1 1;0.03 1;-1 1;0.03 1;1 1" keyTimes="0;.25;.5;.75;1" dur="5s" repeatCount="indefinite"/>
+        <circle r="92" fill="url(#rim)"/>
+        <circle r="92" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.5" stroke-dasharray="1.5 5"/>
+        <circle r="80" fill="url(#face)" stroke="#0d0221" stroke-width="3"/>
+        <circle r="72" fill="none" stroke="#00e5ff" stroke-width="1.5" opacity=".8"/>
+        <text font-family="Consolas,'Courier New',monospace" font-size="10" font-weight="700" letter-spacing="1.5" fill="#ffe14d" textLength="360" lengthAdjust="spacing"><textPath href="#ringpath" startOffset="0">$FLAMINGO ◆ LEONIDA ◆ $FLAMINGO ◆ LEONIDA ◆</textPath></text>
+        <g transform="translate(-23 -39) scale(.46)"><use href="#fl"/></g>
+        <g clip-path="url(#faceclip)">
+          <rect x="-120" y="-100" width="40" height="200" fill="url(#shine)" transform="skewX(-20)">
+            <animate attributeName="x" values="-140;160" dur="2.5s" repeatCount="indefinite"/>
+          </rect>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <g fill="#fff">
+    <path d="M30 60 l3 -9 l3 9 l9 3 l-9 3 l-3 9 l-3 -9 l-9 -3z" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="2.4s" repeatCount="indefinite"/></path>
+    <path d="M208 90 l2 -6 l2 6 l6 2 l-6 2 l-2 6 l-2 -6 l-6 -2z" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="2.4s" begin="-1.2s" repeatCount="indefinite"/></path>
+    <path d="M190 205 l2 -6 l2 6 l6 2 l-6 2 l-2 6 l-2 -6 l-6 -2z" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="2.4s" begin="-0.6s" repeatCount="indefinite"/></path>
+  </g>
+</svg>
