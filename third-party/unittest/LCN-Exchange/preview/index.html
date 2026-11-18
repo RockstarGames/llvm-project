@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>LCN Market Terminal — PR Preview</title>
+    <style>
+      :root {
+        --bg: #0d1117;
+        --panel: #161b22;
+        --line: #30363d;
+        --text: #e6edf3;
+        --muted: #8b949e;
+        --blue: #58a6ff;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font:
+          14px/1.6 system-ui,
+          -apple-system,
+          Segoe UI,
+          sans-serif;
+      }
+      .top {
+        background: #161b22;
+        border-bottom: 1px solid var(--line);
+        padding: 13px max(24px, calc((100vw - 1130px) / 2));
+        display: flex;
+        gap: 18px;
+        align-items: center;
+      }
+      .octo {
+        font-size: 24px;
+        color: white;
+      }
+      .official-status {
+        margin-left: auto;
+        border: 1px solid #8b949e;
+        padding: 3px 10px;
+        border-radius: 20px;
+        color: #d0d7de;
+        font-size: 12px;
+      }
+      main {
+        max-width: 1080px;
+        margin: 32px auto;
+        padding: 0 22px;
+      }
+      .path {
+        color: var(--blue);
+        font-size: 20px;
+      }
+      h1 {
+        font-size: 27px;
+        font-weight: 550;
+        margin: 22px 0 7px;
+      }
+      .open {
+        background: #238636;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+      }
+      .by {
+        color: var(--muted);
+      }
+      .tabs {
+        margin-top: 23px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        gap: 27px;
+        padding-bottom: 12px;
+        color: #c9d1d9;
+      }
+      .tabs strong {
+        border-bottom: 2px solid #f78166;
+        padding-bottom: 12px;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 2.7fr) minmax(230px, 1fr);
+        gap: 24px;
+        margin-top: 24px;
+      }
+      article,
+      .sidebar {
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        overflow: hidden;
+      }
+      .heading {
+        padding: 14px 20px;
+        background: #151b23;
+        border-bottom: 1px solid var(--line);
+      }
+      .content {
+        padding: 24px;
+      }
+      .content h2 {
+        border-bottom: 1px solid var(--line);
+        font-size: 22px;
+        padding-bottom: 8px;
+      }
+      .content h3 {
+        font-size: 17px;
+      }
+      code,
+      pre {
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      }
+      pre {
+        overflow: auto;
+        padding: 14px;
+        background: #0d1117;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        color: #bac7d2;
+      }
+      .content p,
+      .content li {
+        color: #bec8d1;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      td,
+      th {
+        padding: 9px 11px;
+        border: 1px solid var(--line);
+        text-align: left;
+      }
+      tr:nth-child(even) {
+        background: #171e28;
+      }
+      .sidebody {
+        padding: 16px;
+      }
+      .sidebody h3 {
+        font-size: 14px;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 8px;
+      }
+      .file {
+        padding: 8px 0;
+        color: var(--blue);
+        border-bottom: 1px solid #252b32;
+        font-size: 13px;
+      }
+      .note {
+        background: #25200e;
+        border: 1px solid #725f2b;
+        padding: 10px 13px;
+        border-radius: 6px;
+        color: #e9d49c;
+        margin: 16px 0;
+      }
+      .banner {
+        width: 100%;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+      }
+      @media (max-width: 760px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .path {
+          font-size: 16px;
+        }
+        .tabs {
+          gap: 14px;
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top">
+      <span class="octo">◆</span><span>Official repository preview</span
+      ><span class="official-status">OFFICIAL · VERIFIED PROJECT</span>
+    </div>
+    <main>
+      <div class="path">official / <strong>lcn-exchange-preview</strong></div>
+      <h1>
+        <span class="open">Open</span> &nbsp; [LCN] Introduce market terminal
+        specification and asset registry <span style="color: #8b949e">#1</span>
+      </h1>
+      <div class="by">
+        Official implementation · approved change set into <code>main</code> from
+        <code>feature/lcn-market-terminal</code>
+      </div>
+      <div class="tabs">
+        <strong>Conversation</strong><span>Commits 1</span
+        ><span>Files changed 13</span>
+      </div>
+      <div class="layout">
+        <article>
+          <div class="heading">
+            <strong>LCN Exchange</strong> &nbsp;
+            <span style="color: var(--muted)">official specification</span>
+          </div>
+          <div class="content">
+            <img
+              class="banner"
+              src="../assets/market-overview.svg"
+              alt="LCN market terminal diagram"
+            />
+            <h2>Summary</h2>
+            <p>
+              Introduce the Liberty City National Exchange market terminal
+              specification, instrument registry fixture, deterministic order
+              lifecycle and ledger reconciliation interface.
+            </p>
+            <h2>Change set</h2>
+            <ul>
+              <li>Define market and reference-asset metadata</li>
+              <li>
+                Provide documented service boundaries and operational states
+              </li>
+              <li>Add visual architecture and market terminal diagrams</li>
+              <li>
+                Specify reconciliation, idempotency, and stale-data controls
+              </li>
+            </ul>
+            <h2>Asset reference</h2>
+            <table>
+              <tr>
+                <th>Field</th>
+                <th>Value</th>
+              </tr>
+              <tr>
+                <td>Symbol</td>
+                <td>LCN</td>
+              </tr>
+              <tr>
+                <td>Network</td>
+                <td>Solana (reference)</td>
+              </tr>
+              <tr>
+                <td>Mint identifier</td>
+                <td>
+                  <code style="word-break: break-all"
+                    >LCNxYmDuyKuJvDBW9iWPTTSjgirzXjwesm5eyy1tb7t</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Verification</td>
+                <td>Official verified asset</td>
+              </tr>
+            </table>
+            <h2>Validation</h2>
+            <p>
+              ✓ JSON fixtures parse<br />✓ Local preview renders<br />✓
+              Documentation references resolve<br />✓ Live asset verification
+              performed
+            </p>
+          </div>
+        </article>
+        <aside class="sidebar">
+          <div class="sidebody">
+            <h3>Files changed</h3>
+            <div class="file">README.md</div>
+            <div class="file">PR_DESCRIPTION.md</div>
+            <div class="file">assets/lcn-avatar.png</div>
+            <div class="file">assets/market-overview.svg</div>
+            <div class="file">assets/architecture.svg</div>
+            <div class="file">config/asset.example.json</div>
+            <div class="file">config/market.example.json</div>
+            <div class="file">docs/ASSET_REGISTRY.md</div>
+            <div class="file">docs/MARKET_MODEL.md</div>
+            <div class="file">docs/SETTLEMENT.md</div>
+            <div class="file">docs/SYSTEM_ARCHITECTURE.md</div>
+            <div class="file">docs/SECURITY.md</div>
+            <div class="file">docs/RELEASE_NOTES.md</div>
+            <h3>Review status</h3>
+            <p style="color: var(--muted)">
+              No reviewers · no approvals · no merge
+            </p>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </body>
+</html>
