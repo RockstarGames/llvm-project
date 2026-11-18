@@ -1,0 +1,19 @@
+{
+  "simulationOnly": true,
+  "referenceUnit": "in-game USD",
+  "displayRate": 1.0,
+  "wallet": {
+    "startingBalance": 0,
+    "dailyTransferLimit": 100000,
+    "transferFeeBasisPoints": 25
+  },
+  "ledger": {
+    "serverAuthoritative": true,
+    "idempotencyRequired": true,
+    "reconciliationEnabled": true
+  },
+  "events": {
+    "mockBankOutage": false,
+    "simulatedMarketVolatility": false
+  }
+}
