@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1200 520" width="1200" height="520" role="img" aria-label="$FLAMINGO system architecture">
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#ffffff" stroke-opacity=".05"/></pattern>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a0535"/><stop offset="1" stop-color="#0d0221"/></linearGradient>
+    <linearGradient id="flg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9fd0"/><stop offset="1" stop-color="#ff2e93"/></linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ffffff" opacity=".7"/></marker>
+    <path id="p1" d="M240 250 L320 250"/><path id="p2" d="M520 250 L600 250"/>
+    <path id="p3" d="M800 230 L840 230 L840 165 L880 165"/><path id="p4" d="M800 270 L840 270 L840 355 L880 355"/>
+    <path id="p5" d="M700 120 L700 200"/><path id="p6" d="M700 300 L700 390"/>
+    <g id="fl">
+      <path d="M70 90 C90 82 72 58 82 42 C88 32 80 24 70 26" fill="none" stroke="url(#flg)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M50 112 L48 152 M60 112 L64 132 L53 139" stroke="#ff4fa0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <ellipse cx="46" cy="96" rx="32" ry="19" fill="url(#flg)" transform="rotate(-8 46 96)"/>
+      <path d="M16 94 Q3 98 5 113 Q18 109 25 100Z" fill="#ff5fae"/>
+      <circle cx="68" cy="26" r="8" fill="url(#flg)"/>
+      <path d="M62 22 Q50 22 47 32 Q55 29 63 30Z" fill="#ffc2e0"/>
+    </g>
+  </defs>
+
+  <rect width="1200" height="520" rx="18" fill="url(#bg)" stroke="#7b2ff7" stroke-width="2"/>
+  <rect width="1200" height="520" rx="18" fill="url(#grid)"/>
+  <text x="32" y="44" font-family="Consolas,'Courier New',monospace" font-size="16" font-weight="700" letter-spacing="4" fill="#00e5ff">// $FLAMINGO SYSTEM ARCHITECTURE</text>
+  <text x="32" y="66" font-family="Consolas,'Courier New',monospace" font-size="12" fill="#9d8ab8">server-authoritative · append-only ledger · event driven</text>
+  <g transform="translate(1120 18) scale(.34)" filter="url(#glow)"><animateTransform attributeName="transform" type="translate" additive="sum" values="0 0;0 -8;0 0" dur="3s" repeatCount="indefinite"/><use href="#fl"/></g>
+
+  <g stroke="#ffffff" stroke-opacity=".35" stroke-width="2" fill="none" marker-end="url(#arr)" stroke-dasharray="6 6">
+    <use xlink:href="#p1" href="#p1"/><use xlink:href="#p2" href="#p2"/><use xlink:href="#p3" href="#p3"/><use xlink:href="#p4" href="#p4"/><use xlink:href="#p5" href="#p5"/><use xlink:href="#p6" href="#p6"/>
+  </g>
+
+  <g font-family="Consolas,'Courier New',monospace" text-anchor="middle">
+    <rect x="40" y="200" width="200" height="100" rx="14" fill="#1a0838" stroke="#00e5ff" stroke-width="2" filter="url(#glow)"/>
+    <text x="140" y="243" font-size="15" font-weight="700" fill="#fff">PLAYER CLIENT</text><text x="140" y="265" font-size="11" fill="#9d8ab8">Phone app · HUD · Kiosk UI</text>
+    <rect x="320" y="200" width="200" height="100" rx="14" fill="#1a0838" stroke="#7b2ff7" stroke-width="2" filter="url(#glow)"/>
+    <text x="420" y="243" font-size="15" font-weight="700" fill="#fff">SESSION GATEWAY</text><text x="420" y="265" font-size="11" fill="#9d8ab8">Auth · rate limit · signing</text>
+    <rect x="600" y="200" width="200" height="100" rx="14" fill="#2a0a52" stroke="#ff2e93" stroke-width="3" filter="url(#glow)"><animate attributeName="stroke-opacity" values="1;.4;1" dur="2.4s" repeatCount="indefinite"/></rect>
+    <text x="700" y="243" font-size="15" font-weight="700" fill="#ffe14d">ECONOMY SERVICE</text><text x="700" y="265" font-size="11" fill="#ffd9ee">Rules · balances · validation</text>
+    <rect x="600" y="30" width="200" height="90" rx="14" fill="#1a0838" stroke="#ff9a1f" stroke-width="2" filter="url(#glow)"/>
+    <text x="700" y="68" font-size="14" font-weight="700" fill="#fff">WORLD HOOKS</text><text x="700" y="90" font-size="11" fill="#9d8ab8">Missions · heists · events</text>
+    <rect x="600" y="390" width="200" height="90" rx="14" fill="#1a0838" stroke="#ff4d6d" stroke-width="2" filter="url(#glow)"/>
+    <text x="700" y="428" font-size="14" font-weight="700" fill="#fff">ANTI-FRAUD</text><text x="700" y="450" font-size="11" fill="#9d8ab8">Heuristics · telemetry</text>
+    <rect x="880" y="120" width="280" height="90" rx="14" fill="#1a0838" stroke="#00ffa3" stroke-width="2" filter="url(#glow)"/>
+    <text x="1020" y="158" font-size="14" font-weight="700" fill="#fff">LEDGER (append-only)</text><text x="1020" y="180" font-size="11" fill="#9d8ab8">Double-entry · idempotent tx</text>
+    <rect x="880" y="310" width="280" height="90" rx="14" fill="#1a0838" stroke="#ffe14d" stroke-width="2" filter="url(#glow)"/>
+    <text x="1020" y="348" font-size="14" font-weight="700" fill="#fff">MARKET SIM ENGINE</text><text x="1020" y="370" font-size="11" fill="#9d8ab8">Seeded price model · shocks</text>
+  </g>
+
+  <g filter="url(#glow)">
+    <circle r="6" fill="#00e5ff"><animateMotion dur="1.6s" repeatCount="indefinite"><mpath xlink:href="#p1" href="#p1"/></animateMotion></circle>
+    <circle r="6" fill="#7b2ff7"><animateMotion dur="1.6s" begin=".4s" repeatCount="indefinite"><mpath xlink:href="#p2" href="#p2"/></animateMotion></circle>
+    <circle r="6" fill="#00ffa3"><animateMotion dur="2s" begin=".8s" repeatCount="indefinite"><mpath xlink:href="#p3" href="#p3"/></animateMotion></circle>
+    <circle r="6" fill="#ffe14d"><animateMotion dur="2.4s" begin="1s" repeatCount="indefinite"><mpath xlink:href="#p4" href="#p4"/></animateMotion></circle>
+    <circle r="6" fill="#ff9a1f"><animateMotion dur="1.4s" begin=".2s" repeatCount="indefinite"><mpath xlink:href="#p5" href="#p5"/></animateMotion></circle>
+    <circle r="6" fill="#ff4d6d"><animateMotion dur="1.6s" begin=".6s" repeatCount="indefinite"><mpath xlink:href="#p6" href="#p6"/></animateMotion></circle>
+  </g>
+
+  <g font-family="Consolas,'Courier New',monospace" font-size="11" fill="#9d8ab8">
+    <text x="256" y="240">tx.request</text>
+    <text x="536" y="240">tx.validated</text>
+    <text x="708" y="162">reward.trigger</text>
+    <text x="848" y="204">ledger.append</text>
+    <text x="848" y="338">price.tick</text>
+    <text x="708" y="352">risk.score</text>
+  </g>
+</svg>

@@ -1,0 +1,63 @@
+{
+  "$comment": "Starting values only. Every number must be tuned with playtests and simulations.",
+  "version": "0.1.0",
+  "asset": "FLAMINGO",
+  "market": {
+    "anchor_price_usd": 4.2,
+    "mu": 0.02,
+    "sigma": 0.45,
+    "mean_reversion_k": 0.35,
+    "tick_seconds": 30,
+    "seed_scope": "session",
+    "price_floor_usd": 0.05,
+    "price_ceiling_usd": 40.0
+  },
+  "faucets": {
+    "mission_payout_share_in_flamingo": 0.3,
+    "mining_rig": {
+      "yield_per_hour": 12.0,
+      "power_cost_per_hour_usd": 3.5,
+      "heat_police_risk_per_hour": 0.01
+    },
+    "daily_cap_per_player": 6000.0
+  },
+  "sinks": {
+    "kiosk_swap_fee_pct": 2.5,
+    "kiosk_swap_fee_progressive_over": 5000.0,
+    "kiosk_swap_fee_progressive_pct": 4.0,
+    "custody_fee_pct_per_day_inactive": 0.2,
+    "crew_tribute_pct": 5.0,
+    "seizure_chance_on_high_risk_tx": 0.12
+  },
+  "limits": {
+    "max_tx_amount": 25000.0,
+    "max_tx_per_minute": 20,
+    "stash_capacity_per_safehouse": 15000.0
+  },
+  "events": [
+    {
+      "id": "influencer_pump",
+      "magnitude": 0.18,
+      "duration_minutes": 20,
+      "weight": 0.25
+    },
+    {
+      "id": "exchange_raid",
+      "magnitude": -0.25,
+      "duration_minutes": 35,
+      "weight": 0.15
+    },
+    {
+      "id": "regulatory_scare",
+      "magnitude": -0.12,
+      "duration_minutes": 60,
+      "weight": 0.2
+    },
+    {
+      "id": "whale_dump",
+      "magnitude": -0.3,
+      "duration_minutes": 15,
+      "weight": 0.1
+    }
+  ]
+}
