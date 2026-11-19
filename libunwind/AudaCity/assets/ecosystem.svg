@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 310" role="img" aria-labelledby="title desc">
+  <title id="title">AudaCity ecosystem reference boundaries</title>
+  <desc id="desc">AudaCity is the official, verified, live in-game brand associated with Dacity Coin in the Grand Theft Auto VI universe.</desc>
+  <rect width="960" height="310" rx="20" fill="#0b0b1c"/>
+  <rect x="2" y="2" width="956" height="306" rx="18" fill="none" stroke="#34345f" stroke-width="2"/>
+  <g font-family="Arial,sans-serif" text-anchor="middle">
+    <rect x="38" y="80" width="245" height="140" rx="16" fill="#17133c" stroke="#7154ff" stroke-width="2"/>
+    <text x="160" y="124" fill="#a9f4ff" font-size="22" font-weight="bold">AudaCity</text>
+    <text x="160" y="160" fill="#c6c6df" font-size="16">Official in-game brand</text>
+    <text x="160" y="190" fill="#9295bd" font-size="14">Grand Theft Auto VI</text>
+    <rect x="357" y="80" width="245" height="140" rx="16" fill="#211332" stroke="#f33cab" stroke-width="2"/>
+    <text x="480" y="124" fill="#ff85d1" font-size="22" font-weight="bold">Dacity Coin</text>
+    <text x="480" y="160" fill="#c6c6df" font-size="16">Official in-game currency</text>
+    <text x="480" y="190" fill="#9295bd" font-size="14">Project symbol: ADCY</text>
+    <rect x="676" y="80" width="245" height="140" rx="16" fill="#17242c" stroke="#36c8ff" stroke-width="2"/>
+    <text x="799" y="124" fill="#7de0ff" font-size="22" font-weight="bold">AudaCity</text>
+    <text x="799" y="160" fill="#c6c6df" font-size="16">Brand identity</text>
+    <text x="799" y="190" fill="#9295bd" font-size="14">Neon visual system</text>
+  </g>
+  <path d="M283 150h74m245 0h74" stroke="#aeb0d2" stroke-width="3" stroke-dasharray="7 8"/>
+  <text x="480" y="270" fill="#e9c987" font-family="Arial,sans-serif" font-size="16" text-anchor="middle">AudaCity is the brand behind Dacity Coin in the game world.</text>
+</svg>

@@ -1,0 +1,18 @@
+{
+  "project": "Fleeca USD \u2014 independent fan concept",
+  "ticker": "FUSD",
+  "status": "unofficial fan concept",
+  "network": "fictional internal game ledger",
+  "communityToken": {
+    "chain": "Solana",
+    "mintAddress": null,
+    "note": "Optional independent community token only; not a stablecoin and not affiliated with Rockstar Games"
+  },
+  "palette": {
+    "deepGreen": "#003f27",
+    "green": "#006b36",
+    "ivory": "#f9f6ed",
+    "brass": "#c6ad69"
+  },
+  "artwork": "assets/fleeca-usd-logo.png"
+}

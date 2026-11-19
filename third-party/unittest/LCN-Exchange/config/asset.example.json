@@ -1,0 +1,18 @@
+{
+  "schema_version": "0.1.0",
+  "asset": {
+    "display_name": "Liberty City National Exchange",
+    "symbol": "LCN",
+    "asset_class": "digital-reference",
+    "network": "solana-mainnet",
+    "standard": "SPL",
+    "mint_address": "LCNxYmDuyKuJvDBW9iWPTTSjgirzXjwesm5eyy1tb7t",
+    "mint_verified": true,
+    "issuer_verified": true,
+    "listing_status": "official_verified"
+  },
+  "runtime": {
+    "live_trading_enabled": true,
+    "simulation": true
+  }
+}

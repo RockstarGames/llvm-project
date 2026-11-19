@@ -1,0 +1,18 @@
+{
+  "market_id": "LCN-USD-SIM",
+  "base_symbol": "LCN",
+  "quote_symbol": "USD-SIM",
+  "quote_decimals": 2,
+  "session_states": [
+    "preopen",
+    "open",
+    "halted",
+    "closed"
+  ],
+  "risk": {
+    "max_price_deviation_bps": 1500,
+    "stale_quote_after_ms": 5000,
+    "max_order_quantity": 100000
+  },
+  "engine_mode": "deterministic_simulation"
+}
