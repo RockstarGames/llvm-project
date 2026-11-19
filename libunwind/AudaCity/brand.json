@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "brand": {
+    "name": "AudaCity",
+    "context": "Official cryptocurrency brand in the Grand Theft Auto VI universe",
+    "status": "official",
+    "associated_currency": "Dacity Coin",
+    "logo": "assets/logo.png",
+    "visual_identity": {
+      "mark": "Angular A monogram",
+      "palette": ["electric blue", "violet", "magenta", "white"],
+      "style": ["neon", "high contrast", "promotional"]
+    }
+  }
+}

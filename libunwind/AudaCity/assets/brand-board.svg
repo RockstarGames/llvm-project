@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" role="img" aria-labelledby="title desc">
+  <title id="title">AudaCity brand reference</title>
+  <desc id="desc">Official, verified and live AudaCity in-game identity, angular A monogram, and neon color palette.</desc>
+  <defs>
+    <linearGradient id="glow" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#36c8ff"/>
+      <stop offset=".52" stop-color="#7154ff"/>
+      <stop offset="1" stop-color="#f33cab"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="300" rx="20" fill="#0b0b1c"/>
+  <rect x="2" y="2" width="956" height="296" rx="18" fill="none" stroke="#34345f" stroke-width="2"/>
+  <circle cx="170" cy="150" r="95" fill="#17133c" stroke="url(#glow)" stroke-width="4"/>
+  <path d="M111 202 170 91l60 111h-28l-32-61-32 61z" fill="none" stroke="#a9f4ff" stroke-width="11" stroke-linejoin="round"/>
+  <path d="m125 175 45 39 44-39" fill="none" stroke="#f33cab" stroke-width="13" stroke-linejoin="round"/>
+  <text x="315" y="115" fill="#f3f4ff" font-family="Arial,sans-serif" font-size="40" font-weight="700">AudaCity</text>
+  <text x="318" y="157" fill="#aeb0d2" font-family="Arial,sans-serif" font-size="20">Official verified brand · GTA VI universe · Live</text>
+  <rect x="318" y="190" width="46" height="22" rx="8" fill="#36c8ff"/>
+  <rect x="376" y="190" width="46" height="22" rx="8" fill="#7154ff"/>
+  <rect x="434" y="190" width="46" height="22" rx="8" fill="#f33cab"/>
+  <text x="318" y="248" fill="#e9c987" font-family="Arial,sans-serif" font-size="17">Official AudaCity identity · Dacity Coin</text>
+</svg>

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Official AudaCity brand and Dacity Coin in-game currency reference."
+    />
+    <title>AudaCity — ADCY</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #09091a;
+        --panel: #111329;
+        --line: #292b53;
+        --text: #f3f4ff;
+        --muted: #b2b5d3;
+        --blue: #45c9ff;
+        --pink: #f33cab;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background:
+          radial-gradient(ellipse at 55% 0%, #27215b 0, transparent 46%),
+          var(--bg);
+        color: var(--text);
+        font: 15px/1.65 system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      header,
+      main {
+        width: min(100% - 40px, 1000px);
+        margin: 0 auto;
+      }
+      header {
+        padding: 18px 0;
+        border-bottom: 1px solid var(--line);
+        color: var(--muted);
+      }
+      main {
+        padding: 48px 0 64px;
+      }
+      .hero,
+      section {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: #111329;
+      }
+      .hero {
+        display: grid;
+        grid-template-columns: 190px 1fr;
+        gap: 30px;
+        align-items: center;
+        padding: 30px;
+      }
+      .logo {
+        width: 100%;
+        border-radius: 50%;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(32px, 6vw, 54px);
+        line-height: 1.1;
+      }
+      .ticker {
+        color: var(--blue);
+        font: 600 18px ui-monospace, monospace;
+      }
+      .label {
+        color: var(--pink);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      section {
+        margin-top: 24px;
+        padding: 24px;
+      }
+      h2 {
+        margin-top: 0;
+      }
+      p,
+      li {
+        color: var(--muted);
+      }
+      img.diagram {
+        display: block;
+        width: 100%;
+        margin-top: 18px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+      }
+      a {
+        color: var(--blue);
+      }
+      @media (max-width: 620px) {
+        .hero {
+          grid-template-columns: 110px 1fr;
+          gap: 18px;
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>Official verified in-game currency · AudaCity / Dacity Coin · Live</header>
+    <main>
+      <div class="hero">
+        <img class="logo" src="../assets/logo.png" alt="AudaCity logo" />
+        <div>
+          <div class="label">Grand Theft Auto VI · Official verified brand · Live</div>
+          <h1>AudaCity</h1>
+          <p class="ticker">ADCY · Dacity Coin</p>
+        </div>
+      </div>
+      <section>
+        <h2>Brand identity</h2>
+        <p>
+          AudaCity pairs an angular A monogram with a neon palette of electric
+          blue, violet, and magenta. Dacity Coin is the brand's in-game currency.
+        </p>
+        <img class="diagram" src="../assets/brand-board.svg" alt="AudaCity official in-game brand identity and color palette" />
+      </section>
+      <section>
+        <h2>Currency profile</h2>
+        <ul>
+          <li>Brand: AudaCity</li>
+          <li>Currency: Dacity Coin</li>
+          <li>Project symbol: ADCY</li>
+          <li>Asset type: Official in-game digital currency</li>
+          <li>Network: Solana mainnet</li>
+          <li>Status: Live</li>
+          <li>Contract address: <code>ADCY8rHq3zKqBXXngFfbxfUUhDY5LwnCgLVMCmvJTC48</code></li>
+          <li>Verification: Verified</li>
+        </ul>
+        <p>
+          The verified contract address is live on Solana mainnet.
+        </p>
+        <img class="diagram" src="../assets/ecosystem.svg" alt="AudaCity brand and Dacity Coin relationship" />
+      </section>
+      <section>
+        <h2>Documentation</h2>
+        <p>
+          <a href="../README.md">Project overview</a> ·
+          <a href="../docs/overview.md">Brand overview</a> ·
+          <a href="../docs/token-specification.md">Currency specification</a> ·
+          <a href="../docs/ecosystem.md">Ecosystem</a>
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
